@@ -12,6 +12,7 @@ class Jump_Game:
 		self.display_rgb_color = (0, 0, 0)
 		self.score = 0
 		self.ball = ball
+		self.holes_amount = 1
 		self.game_over = False
 		self.exit_from_game = False
 		self.game_clock = pygame.time.Clock()
@@ -22,9 +23,9 @@ class Jump_Game:
 
 	def start_game(self):
 		self.init_game_parameters()
-		self.game_clock.tick(2) # 2 iterations per second
 
 		while self.game_over == False and self.exit_from_game == False:
+			self.game_clock.tick(10) # 2 iterations per second
 			self.game_interface()
 			
 			for game_event in pygame.event.get():
@@ -42,8 +43,30 @@ class Jump_Game:
 
 	def game_roadline(self):
 		road_rgb_color = (60, 250, 60)
-		# just for test
-		pygame.draw.lines(self.game_main_window, road_rgb_color, False, [[50, 50], [100, 100], [70, 70], [70, 150]], 5)
+		roadline_coordinates = self.get_lines_coordinates()
+		pygame.draw.lines(self.game_main_window, road_rgb_color, False, roadline_coordinates, 5)
+
+	def get_lines_coordinates(self):
+		result_lines_coordinates = []
+		hole_size = 50
+		start_road_coordinates = [0, 200]
+		end_road_coordinates = [self.display_size[0], 200]
+		hole_end_coordinates = 50
+		lines_start_end_coordinates = []
+		
+		result_lines_coordinates.append(start_road_coordinates)
+		for i in range(self.holes_amount):
+			hole_random_start_coordinates = randint(hole_end_coordinates + hole_size, self.display_size[0] // 2)
+			result_lines_coordinates.append([hole_random_start_coordinates, 200])
+			hole_end_coordinates = hole_random_start_coordinates + hole_size
+			result_lines_coordinates.append([hole_end_coordinates, 200])	
+		result_lines_coordinates.append(end_road_coordinates)
+
+		# print(result_lines_coordinates)
+		return result_lines_coordinates
+
+	def move_game_road(self):
+		pass
 
 	def game_score_rect(self):
 		score_rect_width = 100
