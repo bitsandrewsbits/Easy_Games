@@ -10,9 +10,11 @@ class Jump_Game:
 	def __init__(self, width_height_display = (800, 300), ball = 'ball_obj'):
 		self.display_size = width_height_display
 		self.display_rgb_color = (0, 0, 0)
-		self.score = 0
+		self.road_distance = 0
 		self.ball = ball
 		self.holes_amount = 1
+		self.road_move_speed = 1
+		self.roadlines_coordinates = []
 		self.game_over = False
 		self.exit_from_game = False
 		self.game_clock = pygame.time.Clock()
@@ -25,7 +27,7 @@ class Jump_Game:
 		self.init_game_parameters()
 
 		while self.game_over == False and self.exit_from_game == False:
-			self.game_clock.tick(10) # 2 iterations per second
+			self.game_clock.tick(10) # 5 iterations per second
 			self.game_interface()
 			
 			for game_event in pygame.event.get():
@@ -42,15 +44,15 @@ class Jump_Game:
 
 
 	def game_roadline(self):
-		road_rgb_color = (60, 250, 60)
-		roadline_coordinates = self.get_lines_coordinates()
-		pygame.draw.lines(self.game_main_window, road_rgb_color, False, roadline_coordinates, 5)
+		if self.road_distance % 400 == 0:
+			self.roadlines_coordinates = self.get_lines_coordinates()
+		self.move_game_road()
 
 	def get_lines_coordinates(self):
 		result_lines_coordinates = []
 		hole_size = 50
 		start_road_coordinates = [0, 200]
-		end_road_coordinates = [self.display_size[0], 200]
+		end_road_coordinates = [self.display_size[0] + 50, 200]
 		hole_end_coordinates = 50
 		lines_start_end_coordinates = []
 		
@@ -62,11 +64,19 @@ class Jump_Game:
 			result_lines_coordinates.append([hole_end_coordinates, 200])	
 		result_lines_coordinates.append(end_road_coordinates)
 
-		# print(result_lines_coordinates)
+		print('\nRoadLines coordinates:', result_lines_coordinates)
 		return result_lines_coordinates
 
 	def move_game_road(self):
-		pass
+		road_rgb_color = (60, 250, 60)
+		for coordinates in self.roadlines_coordinates:
+			coordinates[0] = coordinates[0] - self.road_move_speed
+		print(self.roadlines_coordinates)
+		for i in range(0, len(self.roadlines_coordinates), 2):
+			pygame.draw.line(self.game_main_window, (60, 250, 60), 
+				self.roadlines_coordinates[i], self.roadlines_coordinates[i + 1], 5)
+		self.road_distance += 1
+
 
 	def game_score_rect(self):
 		score_rect_width = 100
