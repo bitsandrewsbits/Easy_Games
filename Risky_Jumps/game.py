@@ -44,11 +44,9 @@ class Jump_Game:
 
 
 	def game_roadline(self):
-		if self.road_distance % 400 == 0:
-			self.roadlines_coordinates = self.get_lines_coordinates()
-		self.move_game_road()
+		self.show_and_move_game_road()
 
-	def get_lines_coordinates(self):
+	def create_lines_coordinates(self):
 		result_lines_coordinates = []
 		hole_size = 50
 		start_road_coordinates = [0, 200]
@@ -61,22 +59,49 @@ class Jump_Game:
 			hole_random_start_coordinates = randint(hole_end_coordinates + hole_size, self.display_size[0] // 2)
 			result_lines_coordinates.append([hole_random_start_coordinates, 200])
 			hole_end_coordinates = hole_random_start_coordinates + hole_size
-			result_lines_coordinates.append([hole_end_coordinates, 200])	
+			result_lines_coordinates.append([hole_end_coordinates, 200])
 		result_lines_coordinates.append(end_road_coordinates)
 
-		print('\nRoadLines coordinates:', result_lines_coordinates)
+		# print('\nRoadLines coordinates:', result_lines_coordinates)
 		return result_lines_coordinates
 
-	def move_game_road(self):
+	def show_and_move_game_road(self):
+		self.manage_road_coordinates()
+		
 		road_rgb_color = (60, 250, 60)
 		for coordinates in self.roadlines_coordinates:
 			coordinates[0] = coordinates[0] - self.road_move_speed
-		print(self.roadlines_coordinates)
+		
 		for i in range(0, len(self.roadlines_coordinates), 2):
-			pygame.draw.line(self.game_main_window, (60, 250, 60), 
+			pygame.draw.line(self.game_main_window, road_rgb_color, 
 				self.roadlines_coordinates[i], self.roadlines_coordinates[i + 1], 5)
 		self.road_distance += 1
+		# print('Road distance:', self.road_distance)
+		
+		if self.road_distance % self.display_size[0] == 0 and self.road_distance != 0:
+			print('Removing coordinates...')
+			self.remove_road_coordinates_beyond_screen()
 
+	def manage_road_coordinates(self):
+		tmp_road_coordinates = self.create_lines_coordinates()
+		if self.road_distance % self.display_size[0] == 0:
+			print('Adding another coordinates...')
+			tmp_road_coordinates = self.create_lines_coordinates()
+			tmp_road_coordinates = self.change_road_coordinates(tmp_road_coordinates)
+			self.roadlines_coordinates += tmp_road_coordinates
+			print(self.roadlines_coordinates)
+
+	def change_road_coordinates(self, coordinates_arr = [[1, 0]]):
+		change_coordinates_value = self.display_size[0]
+		for coordinates in coordinates_arr:
+			coordinates[0] += change_coordinates_value
+
+	def remove_road_coordinates_beyond_screen(self):
+		amount_of_removed_elem = 0
+		for i in range(len(self.roadlines_coordinates) - amount_of_removed_elem):
+			if self.roadlines_coordinates[i][0] < 0:
+				self.roadlines_coordinates.pop(i)
+				amount_of_removed_elem += 1
 
 	def game_score_rect(self):
 		score_rect_width = 100
