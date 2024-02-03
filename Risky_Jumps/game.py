@@ -14,7 +14,7 @@ class Jump_Game:
 		self.ball = ball
 		self.holes_amount = 1
 		self.road_move_speed = 1
-		self.roadlines_coordinates = []
+		self.roadlines_coordinates = self.create_lines_coordinates()
 		self.game_over = False
 		self.exit_from_game = False
 		self.game_clock = pygame.time.Clock()
@@ -27,7 +27,7 @@ class Jump_Game:
 		self.init_game_parameters()
 
 		while self.game_over == False and self.exit_from_game == False:
-			self.game_clock.tick(10) # 5 iterations per second
+			self.game_clock.tick(30) # 30 iterations per second
 			self.game_interface()
 			
 			for game_event in pygame.event.get():
@@ -56,7 +56,7 @@ class Jump_Game:
 		
 		result_lines_coordinates.append(start_road_coordinates)
 		for i in range(self.holes_amount):
-			hole_random_start_coordinates = randint(hole_end_coordinates + hole_size, self.display_size[0] // 2)
+			hole_random_start_coordinates = randint(hole_end_coordinates + hole_size, self.display_size[0] // 2 * (i + 1))
 			result_lines_coordinates.append([hole_random_start_coordinates, 200])
 			hole_end_coordinates = hole_random_start_coordinates + hole_size
 			result_lines_coordinates.append([hole_end_coordinates, 200])
@@ -79,15 +79,17 @@ class Jump_Game:
 		# print('Road distance:', self.road_distance)
 		
 		if self.road_distance % self.display_size[0] == 0 and self.road_distance != 0:
+			print('Distance:', self.road_distance)
 			print('Removing coordinates...')
 			self.remove_road_coordinates_beyond_screen()
+			print('Adding new hole...')
+			self.holes_amount += 1
 
 	def manage_road_coordinates(self):
-		tmp_road_coordinates = self.create_lines_coordinates()
 		if self.road_distance % self.display_size[0] == 0:
 			print('Adding another coordinates...')
 			tmp_road_coordinates = self.create_lines_coordinates()
-			tmp_road_coordinates = self.change_road_coordinates(tmp_road_coordinates)
+			self.change_road_coordinates(tmp_road_coordinates)
 			self.roadlines_coordinates += tmp_road_coordinates
 			print(self.roadlines_coordinates)
 
@@ -98,10 +100,15 @@ class Jump_Game:
 
 	def remove_road_coordinates_beyond_screen(self):
 		amount_of_removed_elem = 0
-		for i in range(len(self.roadlines_coordinates) - amount_of_removed_elem):
-			if self.roadlines_coordinates[i][0] < 0:
-				self.roadlines_coordinates.pop(i)
-				amount_of_removed_elem += 1
+		print('Coordinates before removing...')
+		print(self.roadlines_coordinates)
+		current_roadlines_coordinates_length = len(self.roadlines_coordinates)
+		if (current_roadlines_coordinates_length // 2) % 2 != 0:
+			self.roadlines_coordinates = self.roadlines_coordinates[current_roadlines_coordinates_length // 2 - 1:]
+		else:
+			self.roadlines_coordinates = self.roadlines_coordinates[current_roadlines_coordinates_length // 2:]
+		print('Coordinates after removing...')
+		print(self.roadlines_coordinates)
 
 	def game_score_rect(self):
 		score_rect_width = 100
