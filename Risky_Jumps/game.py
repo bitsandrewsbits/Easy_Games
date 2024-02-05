@@ -17,7 +17,7 @@ class Jump_Game:
 		self.road_holes_coordinates = []
 		self.max_amount_of_hole_with_display_parameters = self.display_size[0] // (self.hole_size * 2)
 		self.road_move_speed = 1
-		self.roadlines_coordinates = self.create_lines_coordinates(0, self.display_size[0])
+		self.roadlines_coordinates = []
 		self.game_over = False
 		self.exit_from_game = False
 		self.game_clock = pygame.time.Clock()
@@ -61,7 +61,6 @@ class Jump_Game:
 			print(f'Changing to MAX possible amount of holes: {max_amount_of_hole_with_display_parameters}')
 			self.holes_amount = max_amount_of_hole_with_display_parameters
 
-		find_right_hole_coordinate = False
 		self.road_holes_coordinates = [randint(start_road_coordinates, end_road_coordinates)]
 		
 		if self.holes_amount == 1:
@@ -72,15 +71,12 @@ class Jump_Game:
 			result_lines_coordinates.append(end_roadline_coordinates)
 		elif self.holes_amount > 1:
 			for i in range(self.holes_amount - 1):
-				print('Hole coordinates:', self.road_holes_coordinates)
+				find_right_hole_coordinate = False
 				while not find_right_hole_coordinate:
 					hole_random_start_coordinates = randint(start_road_coordinates, end_road_coordinates)
-					for hole_coordinate in self.road_holes_coordinates:
-						if hole_random_start_coordinates > hole_coordinate + 2 * self.hole_size:
-							self.road_holes_coordinates.append(hole_random_start_coordinates)
-							find_right_hole_coordinate = True
-							break
-						elif hole_random_start_coordinates < hole_coordinate - 2 * self.hole_size:
+					for hole_start_coordinate in self.road_holes_coordinates:
+						if hole_random_start_coordinates > hole_start_coordinate + 2 * self.hole_size or \
+						    hole_random_start_coordinates < hole_start_coordinate - 2 * self.hole_size:
 							self.road_holes_coordinates.append(hole_random_start_coordinates)
 							find_right_hole_coordinate = True
 							break
@@ -90,7 +86,7 @@ class Jump_Game:
 				result_lines_coordinates.append([hole_end_coordinates, 200])
 			result_lines_coordinates.append(end_roadline_coordinates)
 
-		# print('\nRoadLines coordinates:', result_lines_coordinates)
+		print('Hole coordinates:', self.road_holes_coordinates)
 		return result_lines_coordinates
 
 	def show_and_move_game_road(self):
@@ -104,20 +100,21 @@ class Jump_Game:
 			pygame.draw.line(self.game_main_window, road_rgb_color, 
 				self.roadlines_coordinates[i], self.roadlines_coordinates[i + 1], 5)
 		self.road_distance += 1
-		# print('Road distance:', self.road_distance)
 		
 		if self.road_distance % self.display_size[0] == 0 and self.road_distance != 0:
 			print('Distance:', self.road_distance)
 			print('Removing coordinates...')
 			self.remove_road_coordinates_beyond_screen()
+			print('Coordinates after removing.')
+			print(self.roadlines_coordinates)
 			print('Adding new hole...')
 			self.holes_amount += 1
+			print('Amount of holes =', self.holes_amount)
 
 	def manage_road_coordinates(self):
 		if self.road_distance == 0:
 			print('Start adding coordinates...(distance = 0)')
-			tmp_road_coordinates = self.create_lines_coordinates(0, self.display_size[0])
-			self.roadlines_coordinates += tmp_road_coordinates
+			self.set_up_start_roadline_coordinates()
 			print(self.roadlines_coordinates)
 		elif self.road_distance % self.display_size[0] == 0:
 			print(f'Another adding coordinates...(distance = {self.road_distance})')
@@ -125,11 +122,10 @@ class Jump_Game:
 			self.roadlines_coordinates += tmp_road_coordinates
 			print(self.roadlines_coordinates)
 
-
-	# def change_road_coordinates(self, coordinates_arr = [[1, 0]]):
-	# 	change_coordinates_value = self.display_size[0]
-	# 	for coordinates in coordinates_arr:
-	# 		coordinates[0] += change_coordinates_value
+	def set_up_start_roadline_coordinates(self):
+		self.roadlines_coordinates = self.create_lines_coordinates(self.hole_size, self.display_size[0] - self.hole_size)
+		self.roadlines_coordinates += self.create_lines_coordinates(self.display_size[0], 
+																	2 * self.display_size[0] - self.hole_size)
 
 	def remove_road_coordinates_beyond_screen(self):
 		amount_of_removed_elem = 0
