@@ -54,6 +54,7 @@ class Jump_Game:
 		start_roadline_coordinates = [start_road_coordinates, 200]
 		end_roadline_coordinates = [end_road_coordinates, 200]
 		hole_end_coordinates = 50
+		self.road_holes_coordinates = [randint(start_road_coordinates, end_road_coordinates)]
 		
 		result_lines_coordinates.append(start_roadline_coordinates)
 		if self.max_amount_of_hole_with_display_parameters < self.holes_amount:
@@ -61,7 +62,6 @@ class Jump_Game:
 			print(f'Changing to MAX possible amount of holes: {max_amount_of_hole_with_display_parameters}')
 			self.holes_amount = max_amount_of_hole_with_display_parameters
 
-		self.road_holes_coordinates = [randint(start_road_coordinates, end_road_coordinates)]
 		
 		if self.holes_amount == 1:
 			hole_random_start_coordinates = self.road_holes_coordinates[0]
@@ -73,13 +73,31 @@ class Jump_Game:
 			for i in range(self.holes_amount - 1):
 				find_right_hole_coordinate = False
 				while not find_right_hole_coordinate:
+					wrong_coordinate_flag = False
 					hole_random_start_coordinates = randint(start_road_coordinates, end_road_coordinates)
+			
 					for hole_start_coordinate in self.road_holes_coordinates:
-						if hole_random_start_coordinates > hole_start_coordinate + 2 * self.hole_size or \
-						    hole_random_start_coordinates < hole_start_coordinate - 2 * self.hole_size:
+						if hole_random_start_coordinates > hole_start_coordinate:
+							if hole_random_start_coordinates > hole_start_coordinate + 2 * self.hole_size:
+								wrong_coordinate_flag = False
+							else:
+								wrong_coordinate_flag = True
+								break
+						
+						elif hole_random_start_coordinates < hole_start_coordinate:
+							if hole_random_start_coordinates < hole_start_coordinate - 2 * self.hole_size:
+								wrong_coordinate_flag = False
+							else:
+								wrong_coordinate_flag = True
+								break
+
+					if not wrong_coordinate_flag:
+						if hole_random_start_coordinates not in self.road_holes_coordinates:
 							self.road_holes_coordinates.append(hole_random_start_coordinates)
-							find_right_hole_coordinate = True
-							break
+						
+						self.road_holes_coordinates = sorted(self.road_holes_coordinates)
+						# print('Right hole coordinates:', result_start_hole_coordinates)
+						find_right_hole_coordinate = True
 
 				result_lines_coordinates.append([hole_random_start_coordinates, 200])
 				hole_end_coordinates = hole_random_start_coordinates + self.hole_size
