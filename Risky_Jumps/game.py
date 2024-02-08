@@ -5,13 +5,13 @@
 
 import pygame
 from random import randint
+import road_ball as ball
 
 class Jump_Game:
-	def __init__(self, width_height_display = (800, 300), ball = 'ball_obj'):
+	def __init__(self, width_height_display = (800, 300)):
 		self.display_size = width_height_display
 		self.display_rgb_color = (0, 0, 0)
 		self.road_distance = 0
-		self.ball = ball
 		self.holes_amount = 1
 		self.hole_size = 50
 		self.road_holes_coordinates = []
@@ -39,10 +39,10 @@ class Jump_Game:
 
 			pygame.display.flip()
 
-
-
 	def game_interface(self):
 		self.game_main_window.fill(self.display_rgb_color)
+		road_ball = ball.Game_Ball(self.game_main_window)
+		road_ball.draw_ball()
 		self.game_roadline()
 
 
@@ -159,11 +159,6 @@ class Jump_Game:
 			self.roadlines_coordinates = self.roadlines_coordinates[current_roadlines_coordinates_length // 2:]
 		print('Coordinates after removing...')
 		print(self.roadlines_coordinates)
-
-	def game_score_rect(self):
-		score_rect_width = 100
-		score_rect_height = 60
-		score_rect_color = 'grey'
 
 
 #testing
