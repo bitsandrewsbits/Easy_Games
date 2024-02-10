@@ -7,23 +7,51 @@ class Game_Ball:
 		self.ball_radius = radius
 		self.ball_color = ball_color
 		self.screen_surface = screen_surface
+		self.ball_start_center_coordinates = [20, 188]
 		self.ball_center_coordinates = [20, 188]
+		self.ball_jump_high = 60                    #jump max high (in pixels)
+		self.ball_jump_speed = 9                    #pixels/frame (30 pixels/sec)
+		self.ball_jump_speed_on_top = 0
+		self.ball_jump_speed_on_bottom = 0
+		self.acceleration_of_ball_speed_to_up = -0.75   #pixels/frame^2 (-25pixels/c^2)
+		self.acceleration_of_ball_speed_to_down = 0.3   # only a = g in pixels/frame^2, g = 10 pixels/c^2
+		self.ball_jump_total_distance = 120             # in pixels
+		self.ball_move_distance = 0
+		self.ball_jump_to_up = True
+		self.ball_jump_to_down = False
 
 	def draw_ball(self):
 		pg.draw.circle(self.screen_surface, self.ball_color, self.ball_center_coordinates, self.ball_radius)
 
-
 	def ball_jump(self):
-		ball_jump_high = 60    #jump max high 
-		ball_jump_start_speed = 30  #pixels/sec
-		ball_jump_speed_on_top = 0
-		ball_jump_speed_on_bottom = 0
-		acceleration_of_ball_speed_to_up = -0.75   #pixels/sec^2
-		acceleration_of_ball_speed_to_down = 0.3
-		ball_jump_total_distance = 120 
-		ball_jump_to_up = True
-		ball_jump_to_down = False
+		# print('Ball coordinate center:', self.ball_center_coordinates)
+		# print('Ball current speed:', self.ball_jump_speed)
+		if self.ball_jump_to_up:
+			self.ball_center_coordinates[1] -= self.ball_jump_speed
+			self.ball_move_distance += self.ball_jump_speed
+			self.ball_jump_speed += self.acceleration_of_ball_speed_to_up
+			
+		if self.ball_jump_speed == 0:
+			self.ball_jump_to_up = False
+			self.ball_jump_to_down = True
 
-		while not ball_jump_to_down and ball_jump_total_distance > 0:
-			if ball_jump_to_up:
-				pass 
+		if self.ball_jump_to_down:
+			self.ball_center_coordinates[1] += self.ball_jump_speed
+			self.ball_move_distance += self.ball_jump_speed
+			self.ball_jump_speed += self.acceleration_of_ball_speed_to_down
+
+		self.draw_ball()
+
+	def get_ball_jump_status(self):
+		if self.ball_move_distance + self.ball_jump_speed >= self.ball_jump_total_distance:
+			# print('Current ball move distance + current speed of ball:', self.ball_move_distance + self.ball_jump_speed)
+			self.ball_center_coordinates[1] = self.ball_start_center_coordinates[1]
+			self.ball_jump_to_down = False
+			self.ball_jump_to_up = True
+			self.ball_move_distance = 0
+			self.ball_jump_speed = 9
+			# print('Ball has done JUMP!')
+			return 'Ball_jumped'
+		else:
+			# print('Current ball jump distance:', self.ball_move_distance)
+			return 'Ball_in_jump'

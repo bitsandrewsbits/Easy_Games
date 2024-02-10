@@ -23,6 +23,7 @@ class Jump_Game:
 		self.game_clock = pygame.time.Clock()
 		self.game_main_window = pygame.display.set_mode((self.display_size[0], self.display_size[1]))
 		self.road_ball = ball.Game_Ball(self.game_main_window)
+		self.ball_in_jump = False
 
 	def init_game_parameters(self):
 		pygame.init()
@@ -37,14 +38,23 @@ class Jump_Game:
 			for game_event in pygame.event.get():
 				if game_event.type == pygame.QUIT:
 					self.exit_from_game = True
-				elif game_event.type == pygame.K_UP:
-					self.road_ball.ball_jump()
+				
+				if game_event.type == pygame.KEYDOWN:
+					if game_event.key == pygame.K_UP:
+						print('Button UP arrow is pressed!')
+						self.ball_in_jump = True
 
 			pygame.display.flip()
 
 	def game_interface(self):
 		self.game_main_window.fill(self.display_rgb_color)
-		self.road_ball.draw_ball()
+		if not self.ball_in_jump:
+			self.road_ball.draw_ball()
+		elif self.ball_in_jump:
+			if self.road_ball.get_ball_jump_status() == 'Ball_in_jump':
+				self.road_ball.ball_jump()
+			if self.road_ball.get_ball_jump_status() == 'Ball_jumped':
+				self.ball_in_jump = False
 		self.game_roadline()
 
 
