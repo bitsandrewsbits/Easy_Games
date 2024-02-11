@@ -48,6 +48,10 @@ class Jump_Game:
 
 	def game_interface(self):
 		self.game_main_window.fill(self.display_rgb_color)
+		self.check_on_ball_jump()
+		self.game_roadline()
+
+	def check_on_ball_jump(self):
 		if not self.ball_in_jump:
 			self.road_ball.draw_ball()
 		elif self.ball_in_jump:
@@ -55,8 +59,11 @@ class Jump_Game:
 				self.road_ball.ball_jump()
 			if self.road_ball.get_ball_jump_status() == 'Ball_jumped':
 				self.ball_in_jump = False
-		self.game_roadline()
 
+	def check_on_ball_and_holes_coordinates_cause_falling(self):
+		current_ball_X_coordinate = self.road_ball.get_ball_center_coordinates()[0]
+		if current_ball_X_coordinate < self.roadlines_coordinates[1][1] - 1: 
+			# print('Define last point on road before ball do fall.')
 
 	def game_roadline(self):
 		self.show_and_move_game_road()
