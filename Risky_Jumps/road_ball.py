@@ -65,8 +65,8 @@ class Game_Ball:
 	def get_ball_center_coordinates(self):
 		return self.ball_center_coordinates
 
-	def ball_falling_from_road_surface(self):
-		if self.ball_center_coordinates >= self.ball_start_center_coordinates[1] + 100:   # just for test
+	def ball_changing_coordinates_when_falling_from_road(self):
+		if self.ball_center_coordinates[1] - 100 > self.ball_start_center_coordinates[1]:   # just for test
 			self.ball_status = 'game_over'
 		else:
 			self.ball_center_coordinates[1] += self.ball_jump_speed
