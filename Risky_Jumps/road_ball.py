@@ -45,8 +45,6 @@ class Game_Ball:
 
 	def get_ball_jump_status(self):
 		if self.ball_move_distance + self.ball_jump_speed >= self.ball_jump_total_distance:
-			# print('Current ball move distance + current speed of ball:', self.ball_move_distance + self.ball_jump_speed)
-			# print('Ball has done JUMP!')
 			self.ball_center_coordinates[1] = self.ball_start_center_coordinates[1]
 			self.ball_jump_to_down = False
 			self.ball_jump_to_up = True

@@ -69,15 +69,17 @@ class Jump_Game:
 
 	def check_ball_coordinates_when_need_to_fall(self):
 		current_ball_X_coordinate = self.road_ball.get_ball_center_coordinates()[0]
+		current_ball_Y_coordinate = self.road_ball.get_ball_center_coordinates()[1]
+		road_Y_coordinate = 200
 		for road_line_coordinates in self.roadlines_coordinates:
-			if current_ball_X_coordinate - 1 == road_line_coordinates[0]: 
-				print('Ball is falling... Game Over.')
-				return 'ball_falling_cause_game_over'
+			if current_ball_X_coordinate - 1 == road_line_coordinates[0] and current_ball_Y_coordinate <= road_Y_coordinate:
+				if self.road_ball.get_ball_status() != 'ball_in_jump': 
+					print('Ball is falling... Game Over.')
+					return 'ball_falling_cause_game_over'
 
 	def ball_falling_when_game_over(self):
 		if self.road_ball.get_ball_status() != 'game_over':
 			self.road_ball.ball_changing_coordinates_when_falling_from_road()
-		# self.road_ball.draw_ball()
 
 	def game_roadline(self):
 		self.show_and_move_game_road()
