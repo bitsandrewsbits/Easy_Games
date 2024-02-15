@@ -13,7 +13,7 @@ class Jump_Game:
 		self.display_rgb_color = (0, 0, 0)
 		self.road_distance = 0
 		self.holes_amount = 1
-		self.hole_size = 50
+		self.hole_size = 25
 		self.road_holes_coordinates = []
 		self.max_amount_of_hole_with_display_parameters = self.display_size[0] // (self.hole_size * 2)
 		self.road_move_speed = 1
@@ -33,7 +33,7 @@ class Jump_Game:
 		self.init_game_parameters()
 
 		while self.game_over == False and self.exit_from_game == False:
-			self.game_clock.tick(30) # 30 iterations per second
+			self.game_clock.tick(40) # 40 iterations per second
 			self.game_interface()
 			
 			for game_event in pygame.event.get():
@@ -68,14 +68,17 @@ class Jump_Game:
 				self.ball_in_jump = False
 
 	def check_ball_coordinates_when_need_to_fall(self):
+		ball_succesful_jumped_and_on_the_road = True
 		current_ball_X_coordinate = self.road_ball.get_ball_center_coordinates()[0]
 		current_ball_Y_coordinate = self.road_ball.get_ball_center_coordinates()[1]
 		road_Y_coordinate = 200
-		for road_line_coordinates in self.roadlines_coordinates:
-			if current_ball_X_coordinate - 1 == road_line_coordinates[0] and current_ball_Y_coordinate <= road_Y_coordinate:
-				if self.road_ball.get_ball_status() != 'ball_in_jump': 
-					print('Ball is falling... Game Over.')
-					return 'ball_falling_cause_game_over'
+
+		if len(self.roadlines_coordinates) > 0:
+			if current_ball_X_coordinate > self.roadlines_coordinates[1][0] and \
+			    current_ball_X_coordinate < self.roadlines_coordinates[2][0]:
+			    if current_ball_Y_coordinate > road_Y_coordinate or self.road_ball.get_ball_status() in ('move_on_road', 'ball_jumped'):
+			    	print('Ball is falling...Game Over')
+			    	return 'ball_falling_cause_game_over'
 
 	def ball_falling_when_game_over(self):
 		if self.road_ball.get_ball_status() != 'game_over':
@@ -88,7 +91,7 @@ class Jump_Game:
 		result_lines_coordinates = []
 		start_roadline_coordinates = [start_road_coordinates, 200]
 		end_roadline_coordinates = [end_road_coordinates, 200]
-		hole_end_coordinates = 50
+		hole_end_coordinates = 25
 		self.road_holes_coordinates = [randint(start_road_coordinates, end_road_coordinates)]
 		
 		result_lines_coordinates.append(start_roadline_coordinates)
