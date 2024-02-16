@@ -45,7 +45,7 @@ class Jump_Game:
 						print('Button UP arrow is pressed!')
 						self.ball_in_jump = True
 
-			pygame.display.flip()
+			pygame.display.update()
 
 	def game_interface(self):
 		self.game_main_window.fill(self.display_rgb_color)
@@ -56,6 +56,7 @@ class Jump_Game:
 		if self.ball_falling_cause_game_over:
 			self.ball_falling_when_game_over()
 
+		self.show_road_passed_distance()
 		self.game_roadline()
 
 	def check_on_ball_jump(self):
@@ -159,7 +160,9 @@ class Jump_Game:
 		for i in range(0, len(self.roadlines_coordinates), 2):
 			pygame.draw.line(self.game_main_window, road_rgb_color, 
 				self.roadlines_coordinates[i], self.roadlines_coordinates[i + 1], 5)
-		self.road_distance += 1
+		
+		if self.road_ball.get_ball_status() != 'game_over':
+			self.road_distance += 1
 		
 		if self.road_distance % self.display_size[0] == 0 and self.road_distance != 0:
 			print('Distance:', self.road_distance)
@@ -197,6 +200,20 @@ class Jump_Game:
 			self.roadlines_coordinates = self.roadlines_coordinates[current_roadlines_coordinates_length // 2:]
 		print('Coordinates after removing...')
 		print(self.roadlines_coordinates)
+
+	def show_road_passed_distance(self):
+		passed_distance_block_width_height = (60, 25)
+		passed_distance_block_coordinates = [self.display_size[0] - passed_distance_block_width_height[0] * 2, 0,
+											 self.display_size[0] - passed_distance_block_width_height[0],
+											 passed_distance_block_width_height[1] * 2]
+		pygame.draw.rect(self.game_main_window, (100, 100, 100), passed_distance_block_coordinates)
+		font_of_text_in_distance_block = pygame.font.Font('freesansbold.ttf', 20)
+		
+		passed_distance_as_number = font_of_text_in_distance_block.render(f'{self.road_distance}', True, (150, 200, 100), (100, 100, 100))
+		passed_distance_as_number_Rect = passed_distance_as_number.get_rect()
+		passed_distance_as_number_Rect.center = ((passed_distance_block_coordinates[0] + passed_distance_block_coordinates[2]) // 2 + 20,
+												 (passed_distance_block_coordinates[1] + passed_distance_block_coordinates[3]) // 2)			
+		self.game_main_window.blit(passed_distance_as_number, passed_distance_as_number_Rect)
 
 
 #testing
