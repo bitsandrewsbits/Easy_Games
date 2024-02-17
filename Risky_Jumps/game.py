@@ -202,7 +202,7 @@ class Jump_Game:
 		print(self.roadlines_coordinates)
 
 	def show_road_passed_distance(self):
-		passed_distance_block_width_height = (60, 25)
+		passed_distance_block_width_height = (100, 45)
 		passed_distance_block_coordinates = [self.display_size[0] - passed_distance_block_width_height[0] * 2, 0,
 											 self.display_size[0] - passed_distance_block_width_height[0],
 											 passed_distance_block_width_height[1] * 2]
@@ -212,9 +212,14 @@ class Jump_Game:
 		passed_distance_as_number = font_of_text_in_distance_block.render(f'{self.road_distance}', True, (150, 200, 100), (100, 100, 100))
 		passed_distance_as_number_Rect = passed_distance_as_number.get_rect()
 		passed_distance_as_number_Rect.center = ((passed_distance_block_coordinates[0] + passed_distance_block_coordinates[2]) // 2 + 20,
-												 (passed_distance_block_coordinates[1] + passed_distance_block_coordinates[3]) // 2)			
+												 (passed_distance_block_coordinates[1] + passed_distance_block_coordinates[3]) // 2 + 20)			
 		self.game_main_window.blit(passed_distance_as_number, passed_distance_as_number_Rect)
 
+		passed_distance_Block_title = font_of_text_in_distance_block.render('Passed distance:', True, (100, 250, 150), (100, 100, 100))
+		passed_distance_Block_Title_Rect = passed_distance_as_number.get_rect()
+		passed_distance_Block_Title_Rect.center = ((passed_distance_block_coordinates[0] + passed_distance_block_coordinates[2]) // 2 - 25,
+												 (passed_distance_block_coordinates[1] + passed_distance_block_coordinates[3]) // 2 - 15)			
+		self.game_main_window.blit(passed_distance_Block_title, passed_distance_Block_Title_Rect)
 
 #testing
 game = Jump_Game()
