@@ -43,6 +43,12 @@ class Game_Ball:
 
 		self.draw_ball()
 
+	def ball_move_right(self):
+		self.ball_center_coordinates[0] += 1
+
+	def ball_move_left(self):
+		self.ball_center_coordinates[0] -= 1
+
 	def get_ball_jump_status(self):
 		if self.ball_move_distance + self.ball_jump_speed >= self.ball_jump_total_distance:
 			self.ball_center_coordinates[1] = self.ball_start_center_coordinates[1]
@@ -53,7 +59,6 @@ class Game_Ball:
 			self.ball_status = 'ball_jumped'
 			return 'Ball_jumped'
 		else:
-			# print('Current ball jump distance:', self.ball_move_distance)
 			self.ball_status = 'ball_in_jump'
 			return 'Ball_in_jump'
 

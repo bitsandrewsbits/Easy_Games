@@ -45,6 +45,16 @@ class Jump_Game:
 						print('Button UP arrow is pressed!')
 						self.ball_in_jump = True
 
+			pressed_buttons = pygame.key.get_pressed()
+			if pressed_buttons[pygame.K_RIGHT]:
+				# print(pressed_buttons.index(True))
+				if self.road_ball.get_ball_center_coordinates()[0] < self.display_size[0]:
+					self.road_ball.ball_move_right()
+			if pressed_buttons[pygame.K_LEFT]:
+				# print(pressed_buttons.index(True))
+				if self.road_ball.get_ball_center_coordinates()[0] > self.road_ball.ball_start_center_coordinates[0]:
+					self.road_ball.ball_move_left()
+
 			pygame.display.update()
 
 	def game_interface(self):
