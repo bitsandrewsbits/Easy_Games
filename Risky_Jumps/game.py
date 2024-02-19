@@ -31,6 +31,7 @@ class Jump_Game:
 
 	def start_game(self):
 		self.init_game_parameters()
+		self.start_game_menu()
 
 		while self.game_over == False and self.exit_from_game == False:
 			self.game_clock.tick(40) # 40 iterations per second
@@ -42,7 +43,6 @@ class Jump_Game:
 				
 				if game_event.type == pygame.KEYDOWN:
 					if game_event.key == pygame.K_UP:
-						print('Button UP arrow is pressed!')
 						self.ball_in_jump = True
 
 			pressed_buttons = pygame.key.get_pressed()
@@ -230,6 +230,48 @@ class Jump_Game:
 		passed_distance_Block_Title_Rect.center = ((passed_distance_block_coordinates[0] + passed_distance_block_coordinates[2]) // 2 - 25,
 												 (passed_distance_block_coordinates[1] + passed_distance_block_coordinates[3]) // 2 - 15)			
 		self.game_main_window.blit(passed_distance_Block_title, passed_distance_Block_Title_Rect)
+
+	def get_start_button_parameters(self):
+		start_button_size = (150, 50)
+		start_button_parameters = (self.display_size[0] // 2 - 70, self.display_size[1] // 2, 
+									start_button_size[0], start_button_size[1])
+		return start_button_parameters
+
+	def start_game_button(self):
+		start_button_size = (100, 50)
+		start_button_parameters = self.get_start_button_parameters()
+
+		pygame.draw.rect(self.game_main_window, (50, 200, 50), start_button_parameters)
+		font_of_text_in_start_button = pygame.font.Font('freesansbold.ttf', 20)
+		start_button_text = font_of_text_in_start_button.render('Start game', True, (10, 20, 250), (50, 200, 50))
+		start_button_text_Rect = start_button_text.get_rect()
+		start_button_text_Rect.center = (start_button_parameters[0] + start_button_size[0] - 20, 
+			                             start_button_parameters[1] + start_button_size[1] // 2)			
+		self.game_main_window.blit(start_button_text, start_button_text_Rect)
+
+	def get_mouse_XY_coordinate(self):
+		return pygame.mouse.get_pos()
+
+	def mouse_coordinates_in_button_space(self):
+		start_button_size = (100, 50)
+		if self.get_mouse_XY_coordinate()[0] >= self.get_start_button_parameters()[0] and \
+		        self.get_mouse_XY_coordinate()[0] <= self.get_start_button_parameters()[0] + start_button_size[0] and \
+		        self.get_mouse_XY_coordinate()[1] >= self.get_start_button_parameters()[1] and \
+		   		self.get_mouse_XY_coordinate()[1] <= self.get_start_button_parameters()[1] + start_button_size[1]:
+		   	return True
+		else:
+			return False
+
+	def start_game_menu(self):
+		start_game = False
+		while not start_game:
+			self.start_game_button()
+			for game_event in pygame.event.get():
+				if game_event.type == pygame.MOUSEBUTTONDOWN:
+					if self.mouse_coordinates_in_button_space():
+						start_game = True
+
+			pygame.display.update()
 
 #testing
 game = Jump_Game()
