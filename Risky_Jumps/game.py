@@ -25,6 +25,7 @@ class Jump_Game:
 		self.road_ball = ball.Game_Ball(self.game_main_window)
 		self.ball_in_jump = False
 		self.ball_falling_cause_game_over = False
+		self.iterations_per_second = 40
 
 	def init_game_parameters(self):
 		pygame.init()
@@ -34,7 +35,7 @@ class Jump_Game:
 		self.start_game_menu()
 
 		while self.game_over == False and self.exit_from_game == False:
-			self.game_clock.tick(40) # 40 iterations per second
+			self.game_clock.tick(self.iterations_per_second)
 			self.game_interface()
 			
 			for game_event in pygame.event.get():
@@ -85,11 +86,12 @@ class Jump_Game:
 		road_Y_coordinate = 200
 
 		if len(self.roadlines_coordinates) > 0:
-			if current_ball_X_coordinate > self.roadlines_coordinates[1][0] and \
-			    current_ball_X_coordinate < self.roadlines_coordinates[2][0]:
-			    if current_ball_Y_coordinate > road_Y_coordinate or self.road_ball.get_ball_status() in ('move_on_road', 'ball_jumped'):
-			    	print('Ball is falling...Game Over')
-			    	return 'ball_falling_cause_game_over'
+			for i in range(1, len(self.roadlines_coordinates), 2):
+				if current_ball_X_coordinate > self.roadlines_coordinates[i][0] and \
+				    current_ball_X_coordinate < self.roadlines_coordinates[i + 1][0]:
+				    if current_ball_Y_coordinate > road_Y_coordinate or self.road_ball.get_ball_status() in ('move_on_road', 'ball_jumped'):
+				    	print('Ball is falling...Game Over')
+				    	return 'ball_falling_cause_game_over'
 
 	def ball_falling_when_game_over(self):
 		if self.road_ball.get_ball_status() != 'game_over':
@@ -179,6 +181,7 @@ class Jump_Game:
 			print('Adding new hole...')
 			self.holes_amount += 1
 			print('Amount of holes =', self.holes_amount)
+			self.iterations_per_second += 5
 
 	def manage_road_coordinates(self):
 		if self.road_distance == 0:
@@ -238,14 +241,14 @@ class Jump_Game:
 		return start_button_parameters
 
 	def start_game_button(self):
-		start_button_size = (100, 50)
+		start_button_size = (150, 50)
 		start_button_parameters = self.get_start_button_parameters()
 
 		pygame.draw.rect(self.game_main_window, (50, 200, 50), start_button_parameters)
 		font_of_text_in_start_button = pygame.font.Font('freesansbold.ttf', 20)
 		start_button_text = font_of_text_in_start_button.render('Start game', True, (10, 20, 250), (50, 200, 50))
 		start_button_text_Rect = start_button_text.get_rect()
-		start_button_text_Rect.center = (start_button_parameters[0] + start_button_size[0] - 20, 
+		start_button_text_Rect.center = (start_button_parameters[0] + start_button_size[0] - 70, 
 			                             start_button_parameters[1] + start_button_size[1] // 2)			
 		self.game_main_window.blit(start_button_text, start_button_text_Rect)
 
@@ -253,7 +256,7 @@ class Jump_Game:
 		return pygame.mouse.get_pos()
 
 	def mouse_coordinates_in_button_space(self):
-		start_button_size = (100, 50)
+		start_button_size = (150, 50)
 		if self.get_mouse_XY_coordinate()[0] >= self.get_start_button_parameters()[0] and \
 		        self.get_mouse_XY_coordinate()[0] <= self.get_start_button_parameters()[0] + start_button_size[0] and \
 		        self.get_mouse_XY_coordinate()[1] >= self.get_start_button_parameters()[1] and \
