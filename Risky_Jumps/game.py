@@ -45,6 +45,8 @@ class Jump_Game:
 				if game_event.type == pygame.KEYDOWN:
 					if game_event.key == pygame.K_UP:
 						self.ball_in_jump = True
+					if game_event.key == pygame.K_ESCAPE:
+						self.exit_game_menu_window()
 
 			pressed_buttons = pygame.key.get_pressed()
 			if pressed_buttons[pygame.K_RIGHT]:
@@ -275,6 +277,27 @@ class Jump_Game:
 						start_game = True
 
 			pygame.display.update()
+
+	def exit_game_menu_window(self):
+		exit_window_size = (300, 200)
+		font_of_text_in_exit_window = pygame.font.Font('freesansbold.ttf', 20)
+		exit_window_parameters = (self.display_size[0] // 3, 50, exit_window_size[0], exit_window_size[1])
+		exit_title_XY_center = (exit_window_parameters[0] * 1.5, exit_window_parameters[1] + 20)
+
+		while True:
+			exit_window_Rect = pygame.draw.rect(self.game_main_window, (100, 200, 90), exit_window_parameters)
+			exit_window_title = font_of_text_in_exit_window.render('Pause', True, (150, 200, 100), (100, 100, 100))
+			exit_title_Rect = exit_window_title.get_rect()
+			exit_title_Rect.center = exit_title_XY_center
+			self.game_main_window.blit(exit_window_title, exit_title_Rect)
+
+			pygame.display.update()
+
+	def exit_game_button(self):
+		print('exitting from game...')
+
+	def continue_game_button(self):
+		print('resuming game...')
 
 #testing
 game = Jump_Game()
