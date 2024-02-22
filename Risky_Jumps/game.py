@@ -50,11 +50,9 @@ class Jump_Game:
 
 			pressed_buttons = pygame.key.get_pressed()
 			if pressed_buttons[pygame.K_RIGHT]:
-				# print(pressed_buttons.index(True))
 				if self.road_ball.get_ball_center_coordinates()[0] < self.display_size[0]:
 					self.road_ball.ball_move_right()
 			if pressed_buttons[pygame.K_LEFT]:
-				# print(pressed_buttons.index(True))
 				if self.road_ball.get_ball_center_coordinates()[0] > self.road_ball.ball_start_center_coordinates[0]:
 					self.road_ball.ball_move_left()
 
@@ -284,17 +282,48 @@ class Jump_Game:
 		exit_window_parameters = (self.display_size[0] // 3, 50, exit_window_size[0], exit_window_size[1])
 		exit_title_XY_center = (exit_window_parameters[0] * 1.5, exit_window_parameters[1] + 20)
 
-		while True:
+		while not self.exit_from_game:
 			exit_window_Rect = pygame.draw.rect(self.game_main_window, (100, 200, 90), exit_window_parameters)
 			exit_window_title = font_of_text_in_exit_window.render('Pause', True, (150, 200, 100), (100, 100, 100))
 			exit_title_Rect = exit_window_title.get_rect()
 			exit_title_Rect.center = exit_title_XY_center
 			self.game_main_window.blit(exit_window_title, exit_title_Rect)
+			self.exit_game_button()
+
+			for game_event in pygame.event.get():
+				if game_event.type == pygame.MOUSEBUTTONDOWN:
+					if self.exit_game_button_pressed() == True:
+						self.exit_from_game = True
+						break
 
 			pygame.display.update()
 
 	def exit_game_button(self):
-		print('exitting from game...')
+		exit_button_size = (100, 50)
+		exit_button_font_text = pygame.font.Font('freesansbold.ttf', 15)
+		exit_button_parameters = self.get_exit_button_parameters()
+		exit_button_text_XY_center = (exit_button_parameters[0] + 50, exit_button_parameters[1] + 20)
+		
+		exit_button_Rect = pygame.draw.rect(self.game_main_window, (10, 20, 10), exit_button_parameters)
+		exit_button_text = exit_button_font_text.render('Exit', True, (10, 250, 10), (10, 20, 10))
+		exit_button_text_Rect = exit_button_text.get_rect()
+		exit_button_text_Rect.center = exit_button_text_XY_center
+		self.game_main_window.blit(exit_button_text, exit_button_text_Rect)
+
+	def exit_game_button_pressed(self):
+		exit_button_size = (100, 50)
+		if self.get_mouse_XY_coordinate()[0] >= self.get_exit_button_parameters()[0] and \
+		        self.get_mouse_XY_coordinate()[0] <= self.get_exit_button_parameters()[0] + exit_button_size[0] and \
+		        self.get_mouse_XY_coordinate()[1] >= self.get_exit_button_parameters()[1] and \
+		   		self.get_mouse_XY_coordinate()[1] <= self.get_exit_button_parameters()[1] + exit_button_size[1]:
+		   	return True
+		else:
+			return False
+
+	def get_exit_button_parameters(self):
+		exit_button_size = (100, 50)
+		return (self.display_size[0] // 3 + 50, 100, exit_button_size[0], exit_button_size[1])
+
 
 	def continue_game_button(self):
 		print('resuming game...')
