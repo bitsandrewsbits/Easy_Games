@@ -282,19 +282,23 @@ class Jump_Game:
 		exit_window_parameters = (self.display_size[0] // 3, 50, exit_window_size[0], exit_window_size[1])
 		exit_title_XY_center = (exit_window_parameters[0] * 1.5, exit_window_parameters[1] + 20)
 
-		while not self.exit_from_game:
+		game_is_continue = False
+		while not self.exit_from_game and not game_is_continue:
 			exit_window_Rect = pygame.draw.rect(self.game_main_window, (100, 200, 90), exit_window_parameters)
 			exit_window_title = font_of_text_in_exit_window.render('Pause', True, (150, 200, 100), (100, 100, 100))
 			exit_title_Rect = exit_window_title.get_rect()
 			exit_title_Rect.center = exit_title_XY_center
 			self.game_main_window.blit(exit_window_title, exit_title_Rect)
 			self.exit_game_button()
+			self.continue_game_button()
 
 			for game_event in pygame.event.get():
 				if game_event.type == pygame.MOUSEBUTTONDOWN:
 					if self.exit_game_button_pressed() == True:
 						self.exit_from_game = True
 						break
+					if self.continue_game_button_pressed() == True:
+						game_is_continue = True
 
 			pygame.display.update()
 
@@ -326,7 +330,30 @@ class Jump_Game:
 
 
 	def continue_game_button(self):
-		print('resuming game...')
+		continue_button_size = (100, 50)
+		continue_button_font_text = pygame.font.Font('freesansbold.ttf', 15)
+		continue_button_parameters = self.get_continue_button_parameters()
+		continue_button_text_XY_center = (continue_button_parameters[0] + 50, continue_button_parameters[1] + 20)
+		
+		continue_button_Rect = pygame.draw.rect(self.game_main_window, (10, 20, 10), continue_button_parameters)
+		continue_button_text = continue_button_font_text.render('Continue', True, (10, 250, 10), (10, 20, 10))
+		continue_button_text_Rect = continue_button_text.get_rect()
+		continue_button_text_Rect.center = continue_button_text_XY_center
+		self.game_main_window.blit(continue_button_text, continue_button_text_Rect)
+
+	def continue_game_button_pressed(self):
+		continue_button_size = (100, 50)
+		if self.get_mouse_XY_coordinate()[0] >= self.get_continue_button_parameters()[0] and \
+		        self.get_mouse_XY_coordinate()[0] <= self.get_continue_button_parameters()[0] + continue_button_size[0] and \
+		        self.get_mouse_XY_coordinate()[1] >= self.get_continue_button_parameters()[1] and \
+		   		self.get_mouse_XY_coordinate()[1] <= self.get_continue_button_parameters()[1] + continue_button_size[1]:
+		   	return True
+		else:
+			return False
+
+	def get_continue_button_parameters(self):
+		continue_button_size = (100, 50)
+		return (self.display_size[0] // 3 + 170, 100, continue_button_size[0], continue_button_size[1])
 
 #testing
 game = Jump_Game()
