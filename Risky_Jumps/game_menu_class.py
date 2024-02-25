@@ -1,4 +1,5 @@
-# class game menu - for create window and button in it
+# class game menu - for create window
+import menu_button_class as button
 
 class Game_Menu:
 	def __init__(self, pygame_window_object = 'pygame_obj', game_display_size = (10, 10), window_title = "Test", 
@@ -35,5 +36,5 @@ class Game_Menu:
 	def get_buttons(self):
 		buttons = []
 		for _ in range(button_amount):
-			# buttons.append(Button(init parameters for button))
+			# buttons.append(button.Button())
 		return buttons
