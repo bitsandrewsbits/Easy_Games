@@ -2,7 +2,8 @@
 
 class Button:
 	def __init_(self, game_main_window_object,  game_display_size = (300, 100), button_width_height = (20, 10), 
-				button_XY_coordinates = (0, 0), button_color = 'gray', button_text_color = 'orange', button_name = 'Test'):
+				button_XY_coordinates = (0, 0), button_RGB_color = (0, 50, 100), button_text_RGB_color = (150, 200, 50), 
+				button_name = 'Test'):
 		self.main_game_window = game_main_window_object
 		self.game_display_size = game_display_size
 		self.button_size = button_width_height
@@ -12,17 +13,17 @@ class Button:
 		self.button_text_font = pygame.font.Font('freesansbold.ttf', 15)
 		self.button_name = button_name
 
-	def game_button(self):
+	def show_game_button(self):
 		button_parameters = self.get_button_parameters()
 		button_text_XY_center = (button_parameters[0] + 50, button_parameters[1] + 20)
 		
-		button_Rect = pygame.draw.rect(self.main_game_window, (10, 20, 10), button_parameters)
-		button_text = button_text_font.render(self.button_name, True, (10, 250, 10), (10, 20, 10))
+		button_Rect = pygame.draw.rect(self.main_game_window, self.button_color, button_parameters)
+		button_text = button_text_font.render(self.button_name, True, self.button_text_font, self.button_color)
 		button_text_Rect = button_text.get_rect()
 		button_text_Rect.center = button_text_XY_center
 		self.main_game_window.blit(button_text, button_text_Rect)
 
-	def game_button_pressed(self):
+	def button_pressed(self):
 		if self.get_mouse_XY_coordinate()[0] >= self.get_button_parameters()[0] and \
 		        self.get_mouse_XY_coordinate()[0] <= self.get_button_parameters()[0] + self.button_size[0] and \
 		        self.get_mouse_XY_coordinate()[1] >= self.get_button_parameters()[1] and \
@@ -36,3 +37,6 @@ class Button:
 
 	def get_button_parameters(self):
 		return (self.game_display_size[0] // 3 + 170, 100, self.button_size[0], self.button_size[1])
+
+	def get_button_name(self):
+		return self.button_name
