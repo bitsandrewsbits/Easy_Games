@@ -38,11 +38,16 @@ class Game_Menu:
 
 	def get_buttons(self):
 		menu_parameters = self.get_menu_size_parameters()
-		button_names = 
 		XY_button_coordinates = [self.menu_parameters[0] + 20, self.menu_parameters[1] + 50]
 		buttons = []
-		# TODO: define by menu size - what amount of buttons can contain game menu per row(automatically) 
+		# TODO: define by menu size - what amount of buttons can contain game menu per row(automatically)
+		additional_XY_coordinate = (0, 0)
 		for i in range(len(self.button_names)):
-			buttons.append(button.Button(self.main_window_pygame_object, self.game_display_size, (100, 50), 
-										XY_button_coordinates, (10, 20, 10), (10, 250, 10), self.button_names[i]))
+			button = button.Button(self.main_window_pygame_object, self.game_display_size, (100, 50), 
+										XY_button_coordinates, (10, 20, 10), (10, 250, 10), self.button_names[i])
+			button_parameters = button.get_button_parameters()
+			button.set_button_XY_coordinates(button_parameters[0] + additional_XY_coordinate[0],
+											 button_parameters[1] + additional_XY_coordinate[1])
+			buttons.append()
+			additional_XY_coordinate = button_parameters[2]
 		return buttons
