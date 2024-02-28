@@ -1,19 +1,20 @@
 # class Button - for game menu button
+import pygame
 
 class Button:
-	def __init_(self, game_main_window_object,  game_display_size = (300, 100), button_width_height = (20, 10), 
-				button_XY_coordinates = (0, 0), button_RGB_color = (0, 50, 100), button_text_RGB_color = (150, 200, 50), 
+	def __init__(self, game_main_window_object,  game_display_size = (300, 100), button_width_height = (20, 10), 
+				button_XY_coordinates = [0, 0], button_RGB_color = (0, 50, 100), button_text_RGB_color = (150, 200, 50), 
 				button_name = 'Test'):
 		self.main_game_window = game_main_window_object
 		self.game_display_size = game_display_size
 		self.button_size = button_width_height
 		self.button_XY_coordinates = button_XY_coordinates
-		self.button_color = button_color
-		self.button_text_color = button_text_color
-		self.button_text_font = pygame.font.Font('freesansbold.ttf', 15)
+		self.button_color = button_RGB_color
+		self.button_text_color = button_text_RGB_color
 		self.button_name = button_name
 
 	def show_game_button(self):
+		button_text_font = pygame.font.Font('freesansbold.ttf', 15)
 		button_parameters = self.get_button_parameters()
 		button_text_XY_center = (button_parameters[0] + 50, button_parameters[1] + 20)
 		

@@ -52,7 +52,8 @@ class Jump_Game:
 					if game_event.key == pygame.K_UP:
 						self.ball_in_jump = True
 					if game_event.key == pygame.K_ESCAPE:
-						self.exit_game_menu_window()
+						if self.exit_menu.menu_displaying() == True:
+							self.exit_from_game = True
 
 			pressed_buttons = pygame.key.get_pressed()
 			if pressed_buttons[pygame.K_RIGHT]:
@@ -67,6 +68,7 @@ class Jump_Game:
 	def game_interface(self):
 		self.game_main_window.fill(self.display_rgb_color)
 
+		self.start_menu.menu_displaying()
 
 		self.check_on_ball_jump()
 
