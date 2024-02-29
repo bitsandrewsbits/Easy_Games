@@ -38,7 +38,7 @@ class Jump_Game:
 
 	def start_game(self):
 		self.init_game_parameters()
-		self.start_game_menu()
+		self.start_menu.menu_displaying()
 
 		while self.game_over == False and self.exit_from_game == False:
 			self.game_clock.tick(self.iterations_per_second)
@@ -67,8 +67,6 @@ class Jump_Game:
 
 	def game_interface(self):
 		self.game_main_window.fill(self.display_rgb_color)
-
-		self.start_menu.menu_displaying()
 
 		self.check_on_ball_jump()
 
