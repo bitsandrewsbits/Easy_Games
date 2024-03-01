@@ -11,9 +11,9 @@ class Game_Menu:
 		self.menu_window_width_height = menu_window_size
 		self.window_color = window_color
 		self.button_names = button_names
-		self.menu_buttons = self.get_buttons()
 
 	def menu_displaying(self):
+		menu_buttons = self.get_buttons()
 		font_of_text_in_window = pygame.font.Font('freesansbold.ttf', 20)
 		window_parameters = self.get_menu_size_parameters()
 		window_title_XY_center = (window_parameters[0] * 1.5, window_parameters[1] + 20)
@@ -26,17 +26,19 @@ class Game_Menu:
 			window_title_Rect.center = window_title_XY_center
 			self.main_window_pygame_object.blit(window_title, window_title_Rect)
 
-			for button in self.menu_buttons:
-				button.show_game_button()
-			
+			for i in range(len(menu_buttons)):
+				print('button:', menu_buttons[i].get_button_parameters())
+				menu_buttons[i].show_game_button()
+			print('=' * 30)
+
 			for game_event in pygame.event.get():
 				if game_event.type == pygame.MOUSEBUTTONDOWN:
-					for button in self.menu_buttons:
+					for button in menu_buttons:
 						if button.button_pressed() == True:
 							button_pressed = True
 
 			pygame.display.update()
-		print('Exitting from start menu...')
+		print('Exitting from menu...')
 		return button_pressed
 
 	def get_menu_size_parameters(self):
@@ -46,17 +48,22 @@ class Game_Menu:
 		return self.button_names
 
 	def get_buttons(self):
+		print('Creating buttons for menu...')
 		menu_parameters = self.get_menu_size_parameters()
 		XY_button_coordinates = [menu_parameters[0] + 20, menu_parameters[1] + 50]
+		print('INIT buttons parameters:', XY_button_coordinates)
 		buttons = []
 		additional_XY_coordinate = [0, 0]
 		for i in range(len(self.button_names)):
+			print('Buttons XY coordinates:', XY_button_coordinates)
 			button = game_btn.Button(self.main_window_pygame_object, self.main_window_size, (100, 50), 
 									 XY_button_coordinates, (10, 20, 10), (10, 250, 10), self.button_names[i])
 			button_parameters = button.get_button_parameters()
-			print(additional_XY_coordinate[0])
-			button.set_button_XY_coordinates(button_parameters[0] + additional_XY_coordinate[0],
-											 button_parameters[1] + additional_XY_coordinate[1])
+			print('Button parameters:', button_parameters)
+			# print(button_parameters[0] + additional_XY_coordinate[0], button_parameters[1] + additional_XY_coordinate[1])
+			# button.set_button_XY_coordinates(button_parameters[0] + additional_XY_coordinate[0],
+			# 								 button_parameters[1] + additional_XY_coordinate[1])
 			buttons.append(button)
-			additional_XY_coordinate[0] = button_parameters[2]
+			XY_button_coordinates[0] += button_parameters[2]
+		print('FINISH of creation menu buttons...')
 		return buttons
