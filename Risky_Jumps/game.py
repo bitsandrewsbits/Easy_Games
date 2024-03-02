@@ -52,7 +52,9 @@ class Jump_Game:
 					if game_event.key == pygame.K_UP:
 						self.ball_in_jump = True
 					if game_event.key == pygame.K_ESCAPE:
-						if self.exit_menu.menu_displaying() == True:
+						menu_button_name_and_status = self.exit_menu.menu_displaying()
+						if menu_button_name_and_status[1] == True and menu_button_name_and_status[0] == 'Exit':
+							print('Exitting from game...', menu_button_name_and_status)
 							self.exit_from_game = True
 
 			pressed_buttons = pygame.key.get_pressed()

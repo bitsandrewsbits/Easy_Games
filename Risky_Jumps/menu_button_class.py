@@ -29,9 +29,9 @@ class Button:
 		        self.get_mouse_XY_coordinate()[0] <= self.get_button_parameters()[0] + self.button_size[0] and \
 		        self.get_mouse_XY_coordinate()[1] >= self.get_button_parameters()[1] and \
 		   		self.get_mouse_XY_coordinate()[1] <= self.get_button_parameters()[1] + self.button_size[1]:
-		   	return True
+		   	return (self.button_name, True)
 		else:
-			return False
+			return (self.button_name, False)
 
 	def get_mouse_XY_coordinate(self):
 		return pygame.mouse.get_pos()
