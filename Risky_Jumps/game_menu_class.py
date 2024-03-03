@@ -56,15 +56,27 @@ class Game_Menu:
 		return self.button_names
 
 	def get_buttons(self):
+		button_size = (100, 50)
 		print('Creating buttons for menu...')
 		menu_parameters = self.get_menu_size_parameters()
 		first_XY_button_coordinates = [menu_parameters[0] + 20, menu_parameters[1] + 50]
-		XY_buttons_coordinates = [[first_XY_button_coordinates[0] + 150 * i, first_XY_button_coordinates[1]] 
-									for i in range(len(self.button_names))]
+		
+		max_button_amount_per_menu_width = self.menu_window_width_height[0] // 150
+		print('Max amount of buttons per menu width:', max_button_amount_per_menu_width)
+
+		XY_buttons_coordinates = []
+		for i in range(len(self.button_names)):
+			if i % max_button_amount_per_menu_width == 0 and i != 0:
+				XY_buttons_coordinates.append([first_XY_button_coordinates[0], 
+											   first_XY_button_coordinates[1] + (button_size[1] + 20) * (i - 1)])
+			else:
+				XY_buttons_coordinates.append([first_XY_button_coordinates[0] + (button_size[0] + 50) * i, 
+											   first_XY_button_coordinates[1]])
+
 		print(XY_buttons_coordinates)
 		menu_buttons = []
 		for i in range(len(self.button_names)):
-			menu_buttons.append(game_btn.Button(self.main_window_pygame_object, self.main_window_size, (100, 50), 
+			menu_buttons.append(game_btn.Button(self.main_window_pygame_object, self.main_window_size, button_size, 
 							XY_buttons_coordinates[i], (10, 20, 10), (10, 250, 10), self.button_names[i]))
 
 		print('FINISH of creation menu buttons...')
