@@ -49,7 +49,7 @@ class Jump_Game:
 					self.exit_from_game = True
 				
 				if game_event.type == pygame.KEYDOWN:
-					if game_event.key == pygame.K_UP:
+					if game_event.key == pygame.K_UP and self.check_ball_coordinates_when_need_to_fall() != 'ball_falling_cause_game_over':
 						self.ball_in_jump = True
 					if game_event.key == pygame.K_ESCAPE:
 						menu_button_name_and_status = self.exit_menu.menu_displaying()
@@ -59,10 +59,8 @@ class Jump_Game:
 						elif menu_button_name_and_status[1] == True and menu_button_name_and_status[0] == 'New Game':
 							print('Starting a new game...', menu_button_name_and_status)
 							print('Reseting game parameters...')
-							self.holes_amount = 1
-							self.road_distance = 0
-							self.road_move_speed = 1
-							self.road_ball.set_ball_center_coordinates_to_start()
+							self.reset_game_parameters_to_start()
+
 
 			pressed_buttons = pygame.key.get_pressed()
 			if pressed_buttons[pygame.K_RIGHT]:
@@ -73,6 +71,20 @@ class Jump_Game:
 					self.road_ball.ball_move_left()
 
 			pygame.display.update()
+
+	def reset_game_parameters_to_start(self):
+		self.road_distance = 0
+		self.holes_amount = 1
+		self.road_holes_coordinates = []
+		self.road_move_speed = 1
+		self.roadlines_coordinates = []
+		self.game_over = False
+		self.exit_from_game = False
+		self.game_clock = pygame.time.Clock()
+		self.road_ball = ball.Game_Ball(self.game_main_window)
+		self.ball_in_jump = False
+		self.ball_falling_cause_game_over = False
+		self.iterations_per_second = 40
 
 	def game_interface(self):
 		self.game_main_window.fill(self.display_rgb_color)
