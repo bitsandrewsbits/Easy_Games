@@ -20,6 +20,7 @@ class Jump_Game:
 		self.max_amount_of_hole_with_display_parameters = self.display_size[0] // (self.hole_size * 2)
 		self.road_move_speed = 1
 		self.roadlines_coordinates = []
+		self.road_height = 200
 		self.game_over = False
 		self.exit_from_game = False
 		self.game_clock = pygame.time.Clock()
@@ -78,6 +79,7 @@ class Jump_Game:
 		self.road_holes_coordinates = []
 		self.road_move_speed = 1
 		self.roadlines_coordinates = []
+		self.road_height = 200
 		self.game_over = False
 		self.exit_from_game = False
 		self.game_clock = pygame.time.Clock()
@@ -112,13 +114,12 @@ class Jump_Game:
 		ball_succesful_jumped_and_on_the_road = True
 		current_ball_X_coordinate = self.road_ball.get_ball_center_coordinates()[0]
 		current_ball_Y_coordinate = self.road_ball.get_ball_center_coordinates()[1]
-		road_Y_coordinate = 200
 
 		if len(self.roadlines_coordinates) > 0:
 			for i in range(1, len(self.roadlines_coordinates), 2):
 				if current_ball_X_coordinate > self.roadlines_coordinates[i][0] and \
 				    current_ball_X_coordinate < self.roadlines_coordinates[i + 1][0]:
-				    if current_ball_Y_coordinate > road_Y_coordinate or self.road_ball.get_ball_status() in ('move_on_road', 'ball_jumped'):
+				    if current_ball_Y_coordinate > self.road_height or self.road_ball.get_ball_status() in ('move_on_road', 'ball_jumped'):
 				    	print('Ball is falling...Game Over')
 				    	return 'ball_falling_cause_game_over'
 
@@ -131,8 +132,8 @@ class Jump_Game:
 
 	def create_lines_coordinates(self, start_road_coordinates = 1, end_road_coordinates = 1):
 		result_lines_coordinates = []
-		start_roadline_coordinates = [start_road_coordinates, 200]
-		end_roadline_coordinates = [end_road_coordinates, 200]
+		start_roadline_coordinates = [start_road_coordinates, self.road_height]
+		end_roadline_coordinates = [end_road_coordinates, self.road_height]
 		hole_end_coordinates = 25
 		self.road_holes_coordinates = [randint(start_road_coordinates, end_road_coordinates)]
 		
@@ -144,16 +145,16 @@ class Jump_Game:
 
 		if self.holes_amount == 1:
 			hole_random_start_coordinates = self.road_holes_coordinates[0]
-			result_lines_coordinates.append([hole_random_start_coordinates, 200])
+			result_lines_coordinates.append([hole_random_start_coordinates, self.road_height])
 			hole_end_coordinates = hole_random_start_coordinates + self.hole_size
-			result_lines_coordinates.append([hole_end_coordinates, 200])
+			result_lines_coordinates.append([hole_end_coordinates, self.road_height])
 			result_lines_coordinates.append(end_roadline_coordinates)
 		elif self.holes_amount > 1:
 			self.generate_random_hole_start_coordinates()
 			for random_hole_start_coordinates in self.road_holes_coordinates:
-				result_lines_coordinates.append([random_hole_start_coordinates, 200])
+				result_lines_coordinates.append([random_hole_start_coordinates, self.road_height])
 				hole_end_coordinates = random_hole_start_coordinates + self.hole_size
-				result_lines_coordinates.append([hole_end_coordinates, 200])
+				result_lines_coordinates.append([hole_end_coordinates, self.road_height])
 			result_lines_coordinates.append(end_roadline_coordinates)
 
 		return result_lines_coordinates
@@ -222,12 +223,14 @@ class Jump_Game:
 			print('Coordinates after removing.')
 			print(self.roadlines_coordinates)
 			print(f'Another adding coordinates...(distance = {self.road_distance})')
+			# self.road_height = randint(100, self.display_size[1] - 50) - for future game features
 			tmp_road_coordinates = self.create_lines_coordinates(self.display_size[0], 2 * self.display_size[0])
 			self.roadlines_coordinates += tmp_road_coordinates
 			print(self.roadlines_coordinates)
 
 	def set_up_start_roadline_coordinates(self):
 		self.roadlines_coordinates = self.create_lines_coordinates(0, self.display_size[0] - self.hole_size)
+		# self.road_height = randint(100, self.display_size[1] - 50) - for future game features
 		self.roadlines_coordinates += self.create_lines_coordinates(self.display_size[0], 
 																	2 * self.display_size[0] - self.hole_size)
 
