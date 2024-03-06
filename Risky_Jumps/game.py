@@ -25,7 +25,7 @@ class Jump_Game:
 		self.exit_from_game = False
 		self.game_clock = pygame.time.Clock()
 		self.game_main_window = pygame.display.set_mode((self.display_size[0], self.display_size[1]))
-		self.road_ball = ball.Game_Ball(self.game_main_window)
+		self.road_ball = ball.Game_Ball(self.game_main_window, self.road_height)
 		self.ball_in_jump = False
 		self.ball_falling_cause_game_over = False
 		self.iterations_per_second = 40
@@ -223,14 +223,14 @@ class Jump_Game:
 			print('Coordinates after removing.')
 			print(self.roadlines_coordinates)
 			print(f'Another adding coordinates...(distance = {self.road_distance})')
-			# self.road_height = randint(100, self.display_size[1] - 50) - for future game features
+			self.road_height = randint(100, self.display_size[1] - 50) # for future game features
 			tmp_road_coordinates = self.create_lines_coordinates(self.display_size[0], 2 * self.display_size[0])
 			self.roadlines_coordinates += tmp_road_coordinates
 			print(self.roadlines_coordinates)
 
 	def set_up_start_roadline_coordinates(self):
 		self.roadlines_coordinates = self.create_lines_coordinates(0, self.display_size[0] - self.hole_size)
-		# self.road_height = randint(100, self.display_size[1] - 50) - for future game features
+		self.road_height = randint(100, self.display_size[1] - 50)  # for future game features
 		self.roadlines_coordinates += self.create_lines_coordinates(self.display_size[0], 
 																	2 * self.display_size[0] - self.hole_size)
 
