@@ -106,6 +106,7 @@ class Jump_Game:
 			self.road_ball.draw_ball()
 		elif self.ball_in_jump:
 			if self.road_ball.get_ball_jump_status() == 'Ball_in_jump':
+				self.check_is_road_height_changed()
 				self.road_ball.ball_jump()
 			if self.road_ball.get_ball_jump_status() == 'Ball_jumped':
 				self.ball_in_jump = False
@@ -233,6 +234,16 @@ class Jump_Game:
 		self.road_height = randint(100, self.display_size[1] - 50)  # for future game features
 		self.roadlines_coordinates += self.create_lines_coordinates(self.display_size[0], 
 																	2 * self.display_size[0] - self.hole_size)
+
+	def check_is_road_height_changed(self):
+		current_ball_X_coordinate = self.road_ball.get_ball_center_coordinates()[0]
+
+		for i in range(0, len(self.roadlines_coordinates), 2):
+			if self.roadlines_coordinates[i][0] <= current_ball_X_coordinate and \
+			  self.roadlines_coordinates[i + 1][0] >= current_ball_X_coordinate:
+			   self.road_ball.set_road_height(self.roadlines_coordinates[i][1])
+			   # self.road_ball.set_ball_Y_center_coordinates(self.roadlines_coordinates[i][1])
+			   break
 
 	def remove_road_coordinates_beyond_screen(self):
 		amount_of_removed_elem = 0

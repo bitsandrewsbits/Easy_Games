@@ -20,16 +20,23 @@ class Game_Ball:
 		self.ball_jump_to_up = True
 		self.ball_jump_to_down = False
 		self.ball_status = 'move_on_road'
-		self.start_height_of_road = road_height
-		self.height_of_road = road_height
+		self.start_height_of_road = start_road_height
+		self.height_of_road = start_road_height
+		# self.need_to_change_ball_Y_coordinate = True
 
 	def draw_ball(self):
 		pg.draw.circle(self.screen_surface, self.ball_color, self.ball_center_coordinates, self.ball_radius)
 
 	def ball_jump(self):
-		# print('Ball coordinate center:', self.ball_center_coordinates)
-		# print('Ball current speed:', self.ball_jump_speed)
-		
+		# print('Jump total distance =', self.ball_jump_total_distance)
+		if self.is_changed_road_height():
+			changed_ball_Y_coordinate = self.ball_start_center_coordinates[1] + (self.height_of_road - self.start_height_of_road)
+			self.set_ball_Y_center_coordinates_to_start(changed_ball_Y_coordinate)
+			print('Road height was changed... Road height =', self.height_of_road)
+			self.changing_ball_jump_total_distance()
+			print('Changed Jump total distance =', self.ball_jump_total_distance)
+			self.need_to_change_ball_Y_coordinate = False
+
 		if self.ball_jump_to_up:
 			self.ball_center_coordinates[1] -= self.ball_jump_speed
 			self.ball_move_distance += self.ball_jump_speed
@@ -71,15 +78,17 @@ class Game_Ball:
 	def get_ball_center_coordinates(self):
 		return self.ball_center_coordinates
 
-	def set_ball_center_coordinates_to_start(self):
-		self.ball_center_coordinates = self.ball_start_center_coordinates
+	# def set_ball_center_coordinates_to_start(self):
+	# 	self.ball_center_coordinates = self.ball_start_center_coordinates
 
-	def set_road_height(self, road_Y_coordinate = 0):
+	def set_road_height(self, road_Y_coordinate):
 		self.height_of_road = road_Y_coordinate
 
-	def set_ball_Y_center_coordinates(self, Y_coordinate):
+	def set_ball_Y_center_coordinates_to_start(self, Y_coordinate):
 		self.ball_start_center_coordinates[1] = Y_coordinate - 12
-		self.ball_center_coordinates[1] = Y_coordinate - 12
+
+	# def set_ball_Y_center_coordinates(self, Y_coordinate):
+	# 	self.ball_center_coordinates[1] = Y_coordinate
 
 	def ball_changing_coordinates_when_falling_from_road(self):
 		if self.ball_center_coordinates[1] - 100 > self.ball_start_center_coordinates[1]:   # just for test
@@ -98,6 +107,8 @@ class Game_Ball:
 
 	def changing_ball_jump_total_distance(self):
 		self.ball_jump_total_distance += (self.height_of_road - self.start_height_of_road)
+		self.height_of_road = self.start_height_of_road
+
 
 
 
