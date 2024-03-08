@@ -110,6 +110,7 @@ class Jump_Game:
 				self.road_ball.ball_jump()
 			if self.road_ball.get_ball_jump_status() == 'Ball_jumped':
 				self.ball_in_jump = False
+				self.road_ball.set_new_current_ball_Y_center_coordinate()
 
 	def check_ball_coordinates_when_need_to_fall(self):
 		ball_succesful_jumped_and_on_the_road = True
@@ -242,7 +243,6 @@ class Jump_Game:
 			if self.roadlines_coordinates[i][0] <= current_ball_X_coordinate and \
 			  self.roadlines_coordinates[i + 1][0] >= current_ball_X_coordinate:
 			   self.road_ball.set_road_height(self.roadlines_coordinates[i][1])
-			   # self.road_ball.set_ball_Y_center_coordinates(self.roadlines_coordinates[i][1])
 			   break
 
 	def remove_road_coordinates_beyond_screen(self):
