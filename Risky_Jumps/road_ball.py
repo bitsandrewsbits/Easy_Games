@@ -29,11 +29,9 @@ class Game_Ball:
 
 	def ball_jump(self):
 		if self.is_changed_road_height() and self.need_to_change_ball_Y_coordinate:
-			self.set_new_start_ball_Y_center_coordinate()
 			print('Road height was changed... Road height =', self.height_of_road)
 			self.changing_ball_jump_total_distance()
 			print('Changed Jump total distance =', self.ball_jump_total_distance)
-			print('Change Start ball Y coordinate =', self.ball_start_center_coordinates[1])
 			self.need_to_change_ball_Y_coordinate = False
 
 		if self.ball_jump_to_up:
@@ -60,13 +58,18 @@ class Game_Ball:
 
 	def get_ball_jump_status(self):
 		if self.ball_move_distance + self.ball_jump_speed >= self.ball_jump_total_distance:
-			self.ball_center_coordinates[1] = self.ball_start_center_coordinates[1]
+			self.set_new_current_ball_Y_center_coordinate()
+			self.set_new_start_ball_Y_center_coordinate()
 			self.ball_jump_to_down = False
 			self.ball_jump_to_up = True
 			self.ball_move_distance = 0
 			self.ball_jump_speed = 9
 			self.ball_status = 'ball_jumped'
 			self.need_to_change_ball_Y_coordinate = True
+			self.start_height_of_road = self.height_of_road
+			self.ball_jump_total_distance = 120
+			print('Ball start Y coordinate for jump =', self.ball_start_center_coordinates[1])
+			print('Road height =', self.height_of_road)
 			return 'Ball_jumped'
 		else:
 			self.ball_status = 'ball_in_jump'
@@ -89,7 +92,7 @@ class Game_Ball:
 		self.ball_center_coordinates[1] = self.ball_start_center_coordinates[1]
 
 	def ball_changing_coordinates_when_falling_from_road(self):
-		if self.ball_center_coordinates[1] - 100 > self.ball_start_center_coordinates[1]:   # just for test
+		if self.ball_center_coordinates[1] - 100 > self.ball_start_center_coordinates[1]:
 			self.ball_status = 'game_over'
 		else:
 			self.ball_center_coordinates[1] += self.ball_jump_speed
