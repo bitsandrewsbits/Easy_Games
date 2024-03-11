@@ -104,6 +104,7 @@ class Jump_Game:
 		self.game_roadline()
 
 	def check_on_ball_jump(self):
+		self.road_ball.set_new_game_FPS(self.iterations_per_second)
 		if not self.ball_in_jump:
 			self.road_ball.draw_ball()
 		elif self.ball_in_jump:
@@ -141,11 +142,6 @@ class Jump_Game:
 		start_roadline_coordinates = [start_road_coordinates, self.temporary_random_road_height]
 		
 		result_lines_coordinates.append(start_roadline_coordinates)
-
-		if self.max_amount_of_hole_with_display_parameters < self.holes_amount:
-			print('Warning. Achived MAX possible amount of holes in road for this display parameters.')
-			print(f'Changing to MAX possible amount of holes: {max_amount_of_hole_with_display_parameters}')
-			self.holes_amount = max_amount_of_hole_with_display_parameters
 
 		self.generate_random_hole_start_coordinates(start_road_coordinates, end_road_coordinates)
 		
@@ -217,7 +213,7 @@ class Jump_Game:
 			print('Adding new hole...')
 			self.holes_amount += 1
 			print('Amount of holes =', self.holes_amount)
-			self.iterations_per_second += 5
+			self.iterations_per_second += 10
 
 	def manage_road_coordinates(self):
 		if self.road_distance == 0:

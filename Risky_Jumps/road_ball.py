@@ -23,11 +23,16 @@ class Game_Ball:
 		self.start_height_of_road = start_road_height
 		self.height_of_road = start_road_height
 		self.need_to_change_ball_Y_coordinate = True
+		self.start_ball_jump_FPS = 40
+		self.new_ball_jump_FPS = 40
 
 	def draw_ball(self):
 		pg.draw.circle(self.screen_surface, self.ball_color, self.ball_center_coordinates, self.ball_radius)
 
 	def ball_jump(self):
+		if self.game_FPS_changed():
+			self.set_new_ball_accelerations_when_jumping_for_same_moving()
+
 		if self.is_changed_road_height() and self.need_to_change_ball_Y_coordinate:
 			print('Road height was changed... Road height =', self.height_of_road)
 			self.changing_ball_jump_total_distance()
@@ -70,6 +75,7 @@ class Game_Ball:
 			self.ball_jump_total_distance = 120
 			print('Ball start Y coordinate for jump =', self.ball_start_center_coordinates[1])
 			print('Road height =', self.height_of_road)
+			print('===Ball Jumped!===')
 			return 'Ball_jumped'
 		else:
 			self.ball_status = 'ball_in_jump'
@@ -80,6 +86,22 @@ class Game_Ball:
 
 	def get_ball_center_coordinates(self):
 		return self.ball_center_coordinates
+
+	def set_new_game_FPS(self, game_fps = 40):
+		self.new_ball_jump_FPS = game_fps
+
+	def game_FPS_changed(self):
+		if self.start_ball_jump_FPS != self.new_ball_jump_FPS:
+			return True
+		else:
+			return False
+
+	def set_new_ball_accelerations_when_jumping_for_same_moving(self):
+		self.acceleration_of_ball_speed_to_up *= (self.new_ball_jump_FPS / self.start_ball_jump_FPS)
+		self.acceleration_of_ball_speed_to_down *= (self.start_ball_jump_FPS / self.new_ball_jump_FPS)
+		print('New ball acceleration_of_ball_speed_to_up =', self.acceleration_of_ball_speed_to_up)
+		print('New ball acceleration_of_ball_speed_to_down =', self.acceleration_of_ball_speed_to_down)
+		self.start_ball_jump_FPS = self.new_ball_jump_FPS
 
 	def set_road_height(self, road_Y_coordinate):
 		self.height_of_road = road_Y_coordinate
@@ -98,7 +120,6 @@ class Game_Ball:
 			self.ball_center_coordinates[1] += self.ball_jump_speed
 			self.ball_move_distance += self.ball_jump_speed
 			self.ball_jump_speed += self.acceleration_of_ball_speed_to_down
-
 
 	def is_changed_road_height(self):
 		if self.start_height_of_road != self.height_of_road:
