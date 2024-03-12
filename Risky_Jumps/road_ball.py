@@ -13,6 +13,7 @@ class Game_Ball:
 		self.ball_jump_speed = 9                    #pixels/frame (30 pixels/sec)
 		self.ball_jump_speed_on_top = 0
 		self.ball_jump_speed_on_bottom = 0
+		self.acceleration_of_up_jump_per_sec = -25
 		self.acceleration_of_ball_speed_to_up = -0.75   #pixels/frame^2 (-25pixels/c^2)
 		self.acceleration_of_ball_speed_to_down = 0.3   # only a = g in pixels/frame^2, g = 10 pixels/c^2
 		self.ball_jump_total_distance = 120             # in pixels
@@ -25,6 +26,7 @@ class Game_Ball:
 		self.need_to_change_ball_Y_coordinate = True
 		self.start_ball_jump_FPS = 40
 		self.new_ball_jump_FPS = 40
+		self.pixel_per_time_in_sec = 1 / self.new_ball_jump_FPS
 
 	def draw_ball(self):
 		pg.draw.circle(self.screen_surface, self.ball_color, self.ball_center_coordinates, self.ball_radius)
@@ -34,9 +36,9 @@ class Game_Ball:
 			self.set_new_ball_accelerations_when_jumping_for_same_moving()
 
 		if self.is_changed_road_height() and self.need_to_change_ball_Y_coordinate:
-			print('Road height was changed... Road height =', self.height_of_road)
+			# print('Road height was changed... Road height =', self.height_of_road)
 			self.changing_ball_jump_total_distance()
-			print('Changed Jump total distance =', self.ball_jump_total_distance)
+			# print('Changed Jump total distance =', self.ball_jump_total_distance)
 			self.need_to_change_ball_Y_coordinate = False
 
 		if self.ball_jump_to_up:
@@ -45,6 +47,8 @@ class Game_Ball:
 			self.ball_jump_speed += self.acceleration_of_ball_speed_to_up
 			
 		if self.ball_jump_speed == 0:
+			print('Max height in jump =', self.ball_center_coordinates)
+			print('Ball move distance =', self.ball_move_distance)
 			self.ball_jump_to_up = False
 			self.ball_jump_to_down = True
 
@@ -52,6 +56,9 @@ class Game_Ball:
 			self.ball_center_coordinates[1] += self.ball_jump_speed
 			self.ball_move_distance += self.ball_jump_speed
 			self.ball_jump_speed += self.acceleration_of_ball_speed_to_down
+
+		# print('Ball jump speed =', self.ball_jump_speed)
+		# print('Ball move distance =', self.ball_move_distance)
 
 		self.draw_ball()
 
@@ -63,6 +70,7 @@ class Game_Ball:
 
 	def get_ball_jump_status(self):
 		if self.ball_move_distance + self.ball_jump_speed >= self.ball_jump_total_distance:
+			print('Ball center coordinates after jump:', self.ball_center_coordinates)
 			self.set_new_current_ball_Y_center_coordinate()
 			self.set_new_start_ball_Y_center_coordinate()
 			self.ball_jump_to_down = False
@@ -97,8 +105,11 @@ class Game_Ball:
 			return False
 
 	def set_new_ball_accelerations_when_jumping_for_same_moving(self):
-		self.acceleration_of_ball_speed_to_up *= (self.new_ball_jump_FPS / self.start_ball_jump_FPS)
-		self.acceleration_of_ball_speed_to_down *= (self.start_ball_jump_FPS / self.new_ball_jump_FPS)
+		self.pixel_per_time_in_sec = 1 / self.new_ball_jump_FPS
+		print('New FPS =', self.new_ball_jump_FPS)
+		print(self.pixel_per_time_in_sec)
+		self.acceleration_of_ball_speed_to_up = self.acceleration_of_up_jump_per_sec * self.pixel_per_time_in_sec
+		self.acceleration_of_ball_speed_to_down = 10 * self.pixel_per_time_in_sec
 		print('New ball acceleration_of_ball_speed_to_up =', self.acceleration_of_ball_speed_to_up)
 		print('New ball acceleration_of_ball_speed_to_down =', self.acceleration_of_ball_speed_to_down)
 		self.start_ball_jump_FPS = self.new_ball_jump_FPS
