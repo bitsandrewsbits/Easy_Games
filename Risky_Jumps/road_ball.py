@@ -10,12 +10,8 @@ class Game_Ball:
 		self.ball_start_center_coordinates = [20, 188]
 		self.ball_center_coordinates = [20, 188]
 		self.ball_jump_high = 60                    #jump max high (in pixels)
-		self.ball_jump_speed = 9                    #pixels/frame (30 pixels/sec)
 		self.ball_jump_speed_on_top = 0
 		self.ball_jump_speed_on_bottom = 0
-		self.acceleration_of_up_jump_per_sec = -25
-		self.acceleration_of_ball_speed_to_up = -0.75   #pixels/frame^2 (-25pixels/c^2)
-		self.acceleration_of_ball_speed_to_down = 0.3   # only a = g in pixels/frame^2, g = 10 pixels/c^2
 		self.ball_jump_total_distance = 120             # in pixels
 		self.ball_move_distance = 0
 		self.ball_jump_to_up = True
@@ -26,7 +22,10 @@ class Game_Ball:
 		self.need_to_change_ball_Y_coordinate = True
 		self.start_ball_jump_FPS = 40
 		self.new_ball_jump_FPS = 40
-		self.pixel_per_time_in_sec = 1 / self.new_ball_jump_FPS
+		self.k_fps = 1 / self.new_ball_jump_FPS * 1.5
+		self.ball_jump_speed = 60 * self.k_fps                    
+		self.acceleration_of_ball_speed_to_up = self.k_fps * (-self.ball_jump_speed - 10 * self.k_fps)   #pixels/frame^2
+		self.acceleration_of_ball_speed_to_down = 0.3   # only a = g in pixels/frame^2, g = 10 pixels/c^2
 
 	def draw_ball(self):
 		pg.draw.circle(self.screen_surface, self.ball_color, self.ball_center_coordinates, self.ball_radius)
@@ -46,7 +45,7 @@ class Game_Ball:
 			self.ball_move_distance += self.ball_jump_speed
 			self.ball_jump_speed += self.acceleration_of_ball_speed_to_up
 			
-		if self.ball_jump_speed == 0:
+		if self.ball_jump_speed == 0.0:
 			print('Max height in jump =', self.ball_center_coordinates)
 			print('Ball move distance =', self.ball_move_distance)
 			self.ball_jump_to_up = False
@@ -57,8 +56,8 @@ class Game_Ball:
 			self.ball_move_distance += self.ball_jump_speed
 			self.ball_jump_speed += self.acceleration_of_ball_speed_to_down
 
-		# print('Ball jump speed =', self.ball_jump_speed)
-		# print('Ball move distance =', self.ball_move_distance)
+		print('Ball jump speed =', self.ball_jump_speed)
+		print('Ball move distance =', self.ball_move_distance)
 
 		self.draw_ball()
 
