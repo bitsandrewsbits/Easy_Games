@@ -1,6 +1,7 @@
 # file with class Ball for game
 
 import pygame as pg
+import defining_optimal_speed_jump as opt_jump
 
 class Game_Ball:
 	def __init__(self, screen_surface, start_road_height = 0, radius = 10, ball_color = 'yellow'):
@@ -9,10 +10,10 @@ class Game_Ball:
 		self.screen_surface = screen_surface
 		self.ball_start_center_coordinates = [20, 188]
 		self.ball_center_coordinates = [20, 188]
-		self.ball_jump_high = 60                    #jump max high (in pixels)
+		self.ball_jump_high = 60                 #jump max high (in pixels)
 		self.ball_jump_speed_on_top = 0
 		self.ball_jump_speed_on_bottom = 0
-		self.ball_jump_total_distance = 120             # in pixels
+		self.ball_jump_total_distance = 120        # in pixels
 		self.ball_move_distance = 0
 		self.ball_jump_to_up = True
 		self.ball_jump_to_down = False
@@ -24,12 +25,13 @@ class Game_Ball:
 		self.new_ball_jump_FPS = 40
 
 		self.time_for_1_frame_in_game = 1 / self.new_ball_jump_FPS
-		self.ball_jump_speed = 60    # pixels/frame
+		self.start_ball_jump_speed = 5
+		self.ball_jump_speed = 5   # pixels/frame (-0.5 from return func)
 		self.time_for_1_pixel_for_ball_jump = 1 / self.ball_jump_speed
 		self.k_fps = self.time_for_1_pixel_for_ball_jump / self.time_for_1_frame_in_game
 		
-		self.acceleration_of_ball_speed_to_up = -0.49   #pixels/frame^2
-		self.acceleration_of_ball_speed_to_down = 0.3                  # only a = g in pixels/frame^2, g = 10 pixels/c^2
+		self.acceleration_of_ball_speed_to_up = -0.2    #pixels/frame^2
+		self.acceleration_of_ball_speed_to_down = 0.075   # only a = g in pixels/frame^2, g = 10 pixels/c^2
 
 	def draw_ball(self):
 		pg.draw.circle(self.screen_surface, self.ball_color, self.ball_center_coordinates, self.ball_radius)
@@ -49,7 +51,7 @@ class Game_Ball:
 			self.ball_move_distance += self.ball_jump_speed
 			self.ball_jump_speed += self.acceleration_of_ball_speed_to_up
 			
-		if self.ball_jump_speed == 0.0 or self.ball_move_distance == self.ball_jump_high:
+		if round(self.ball_jump_speed, 1) == 0.0 or self.ball_move_distance >= self.ball_jump_high:
 			print('Max height in jump =', self.ball_center_coordinates)
 			print('Ball move distance =', self.ball_move_distance)
 			self.ball_jump_to_up = False
@@ -60,8 +62,8 @@ class Game_Ball:
 			self.ball_move_distance += self.ball_jump_speed
 			self.ball_jump_speed += self.acceleration_of_ball_speed_to_down
 
-		# print('Ball jump speed =', self.ball_jump_speed)
-		# print('Ball move distance =', self.ball_move_distance)
+		print('Ball jump speed =', self.ball_jump_speed)
+		print('Ball move distance =', self.ball_move_distance)
 
 		self.draw_ball()
 
@@ -79,7 +81,7 @@ class Game_Ball:
 			self.ball_jump_to_down = False
 			self.ball_jump_to_up = True
 			self.ball_move_distance = 0
-			self.ball_jump_speed = 9
+			self.ball_jump_speed = self.start_ball_jump_speed
 			self.ball_status = 'ball_jumped'
 			self.need_to_change_ball_Y_coordinate = True
 			self.start_height_of_road = self.height_of_road
@@ -108,11 +110,11 @@ class Game_Ball:
 			return False
 
 	def set_new_ball_accelerations_when_jumping_for_same_moving(self):
-		self.pixel_per_time_in_sec = 1 / self.new_ball_jump_FPS
-		print('New FPS =', self.new_ball_jump_FPS)
-		print(self.pixel_per_time_in_sec)
-		self.acceleration_of_ball_speed_to_up = self.acceleration_of_up_jump_per_sec * self.pixel_per_time_in_sec
-		self.acceleration_of_ball_speed_to_down = 10 * self.pixel_per_time_in_sec
+		temp_up_jump_parameters = opt_jump.get_acceleration_v0_steps_for_S_and_FPS_up_jump(self.new_ball_jump_FPS)
+		self.start_ball_jump_speed = temp_up_jump_parameters[0] - 0.5
+		self.acceleration_of_ball_speed_to_up = temp_up_jump_parameters[1]
+		temp_down_jump_parameters = opt_jump.get_acceleration_steps_for_S_and_FPS_down_jump(self.new_ball_jump_FPS)
+		self.acceleration_of_ball_speed_to_down = temp_down_jump_parameters[0]
 		print('New ball acceleration_of_ball_speed_to_up =', self.acceleration_of_ball_speed_to_up)
 		print('New ball acceleration_of_ball_speed_to_down =', self.acceleration_of_ball_speed_to_down)
 		self.start_ball_jump_FPS = self.new_ball_jump_FPS
