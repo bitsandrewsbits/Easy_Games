@@ -27,8 +27,6 @@ class Game_Ball:
 		self.time_for_1_frame_in_game = 1 / self.new_ball_jump_FPS
 		self.start_ball_jump_speed = 5
 		self.ball_jump_speed = 5   # pixels/frame (-0.5 from return func)
-		self.time_for_1_pixel_for_ball_jump = 1 / self.ball_jump_speed
-		self.k_fps = self.time_for_1_pixel_for_ball_jump / self.time_for_1_frame_in_game
 		
 		self.acceleration_of_ball_speed_to_up = -0.2    #pixels/frame^2
 		self.acceleration_of_ball_speed_to_down = 0.075   # only a = g in pixels/frame^2, g = 10 pixels/c^2
@@ -51,7 +49,7 @@ class Game_Ball:
 			self.ball_move_distance += self.ball_jump_speed
 			self.ball_jump_speed += self.acceleration_of_ball_speed_to_up
 			
-		if round(self.ball_jump_speed, 1) == 0.0 or self.ball_move_distance >= self.ball_jump_high:
+		if round(self.ball_jump_speed) == 0.0 or self.ball_move_distance >= self.ball_jump_high:
 			print('Max height in jump =', self.ball_center_coordinates)
 			print('Ball move distance =', self.ball_move_distance)
 			self.ball_jump_to_up = False
@@ -74,7 +72,8 @@ class Game_Ball:
 		self.ball_center_coordinates[0] -= 1
 
 	def get_ball_jump_status(self):
-		if self.ball_move_distance + self.ball_jump_speed >= self.ball_jump_total_distance:
+		if self.ball_move_distance + self.ball_jump_speed >= self.ball_jump_total_distance or \
+		self.height_of_road <= self.ball_center_coordinates[1] + self.ball_radius:
 			print('Ball center coordinates after jump:', self.ball_center_coordinates)
 			self.set_new_current_ball_Y_center_coordinate()
 			self.set_new_start_ball_Y_center_coordinate()
