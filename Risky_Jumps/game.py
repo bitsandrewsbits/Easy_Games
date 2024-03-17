@@ -34,6 +34,8 @@ class Jump_Game:
 					                     (300, 200), (100, 100, 100), ['Start'])
 		self.exit_menu = menu.Game_Menu(self.game_main_window, self.display_size, "Pause", 
 					                     (300, 200), (100, 100, 100), ['Exit', 'Continue', "New Game"])
+		self.game_over_menu = menu.Game_Menu(self.game_main_window, self.display_size, "Game Over", 
+										 (300, 200), (120, 140, 130), ['New Game', 'Exit'])
 
 	def init_game_parameters(self):
 		pygame.init()
@@ -131,6 +133,8 @@ class Jump_Game:
 	def ball_falling_when_game_over(self):
 		if self.road_ball.get_ball_status() != 'game_over':
 			self.road_ball.ball_changing_coordinates_when_falling_from_road()
+		else:
+			self.game_over_menu.menu_displaying()
 
 	def game_roadline(self):
 		self.show_and_move_game_road()
@@ -140,12 +144,10 @@ class Jump_Game:
 		temp_random_road_height = self.temporary_random_road_height
 		
 		start_roadline_coordinates = [start_road_coordinates, self.temporary_random_road_height]
-		
 		result_lines_coordinates.append(start_roadline_coordinates)
 
 		self.generate_random_hole_start_coordinates(start_road_coordinates, end_road_coordinates)
 		
-		# print('Cycle...')
 		for i in range(len(self.road_holes_coordinates)):
 			result_lines_coordinates.append([self.road_holes_coordinates[i], temp_random_road_height])
 			hole_end_coordinates = self.road_holes_coordinates[i] + self.hole_size
@@ -157,7 +159,7 @@ class Jump_Game:
 		
 		result_lines_coordinates.append([end_road_coordinates, temp_random_road_height])
 		print(result_lines_coordinates)
-		# print('End of function.')
+
 		self.temporary_random_road_height = temp_random_road_height
 
 		return result_lines_coordinates

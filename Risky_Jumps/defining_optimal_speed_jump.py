@@ -4,10 +4,10 @@
 def get_acceleration_v0_steps_for_S_and_FPS_up_jump(fps = 40):
 	S = 60
 	fps_t = 1 / fps  # second
-	v0 = fps - 10  # start speed (on bottom) - px/sec
-	test_v0 = fps - 10
+	v0 = 10  # start speed (on bottom) - px/sec
+	test_v0 = 10
 	v = 0  # end speed (on top)
-	acceleration = -0.1   # need to find
+	acceleration = -0.05   # need to find
 	amount_of_iterations = 0
 	S_result = 0
 	# while round(S_result, 1) != S and v0 != 0:
@@ -27,8 +27,8 @@ def get_acceleration_v0_steps_for_S_and_FPS_up_jump(fps = 40):
 		if round(S_result, 1) >= S:
 			return [round(test_v0 / fps, 1), round(acceleration / fps, 3), amount_of_iterations, S_result]
 		else:
-			acceleration -= 0.1
-			test_v0 += 2
+			acceleration -= 0.05
+			test_v0 += 1.5
 			v0 = test_v0
 			amount_of_iterations = 0
 			S_result = 0

@@ -50,8 +50,8 @@ class Game_Ball:
 			self.ball_jump_speed += self.acceleration_of_ball_speed_to_up
 			
 		if round(self.ball_jump_speed) == 0.0 or self.ball_move_distance >= self.ball_jump_high:
-			print('Max height in jump =', self.ball_center_coordinates)
-			print('Ball move distance =', self.ball_move_distance)
+			# print('Max height in jump =', self.ball_center_coordinates)
+			# print('Ball move distance =', self.ball_move_distance)
 			self.ball_jump_to_up = False
 			self.ball_jump_to_down = True
 
@@ -60,8 +60,8 @@ class Game_Ball:
 			self.ball_move_distance += self.ball_jump_speed
 			self.ball_jump_speed += self.acceleration_of_ball_speed_to_down
 
-		print('Ball jump speed =', self.ball_jump_speed)
-		print('Ball move distance =', self.ball_move_distance)
+		# print('Ball jump speed =', self.ball_jump_speed)
+		# print('Ball move distance =', self.ball_move_distance)
 
 		self.draw_ball()
 
@@ -111,6 +111,7 @@ class Game_Ball:
 	def set_new_ball_accelerations_when_jumping_for_same_moving(self):
 		temp_up_jump_parameters = opt_jump.get_acceleration_v0_steps_for_S_and_FPS_up_jump(self.new_ball_jump_FPS)
 		self.start_ball_jump_speed = temp_up_jump_parameters[0] - 0.5
+		print('New ball jump speed(up) =', self.start_ball_jump_speed)
 		self.acceleration_of_ball_speed_to_up = temp_up_jump_parameters[1]
 		temp_down_jump_parameters = opt_jump.get_acceleration_steps_for_S_and_FPS_down_jump(self.new_ball_jump_FPS)
 		self.acceleration_of_ball_speed_to_down = temp_down_jump_parameters[0]
