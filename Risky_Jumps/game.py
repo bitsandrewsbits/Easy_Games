@@ -24,6 +24,7 @@ class Jump_Game:
 		self.temporary_random_road_height = 200
 		self.game_over = False
 		self.exit_from_game = False
+		self.game_parameters_reseted = False
 		self.game_clock = pygame.time.Clock()
 		self.game_main_window = pygame.display.set_mode((self.display_size[0], self.display_size[1]))
 		self.road_ball = ball.Game_Ball(self.game_main_window, self.road_height)
@@ -42,7 +43,6 @@ class Jump_Game:
 
 	def start_game(self):
 		self.init_game_parameters()
-		self.start_menu.menu_displaying()
 
 		while self.game_over == False and self.exit_from_game == False:
 			self.game_clock.tick(self.iterations_per_second)
@@ -64,6 +64,7 @@ class Jump_Game:
 							print('Starting a new game...', menu_button_name_and_status)
 							print('Reseting game parameters...')
 							self.reset_game_parameters_to_start()
+							self.game_parameters_reseted = True
 
 
 			pressed_buttons = pygame.key.get_pressed()
@@ -86,6 +87,7 @@ class Jump_Game:
 		self.temporary_random_road_height = 200
 		self.game_over = False
 		self.exit_from_game = False
+		self.game_parameters_reseted = True
 		self.game_clock = pygame.time.Clock()
 		self.road_ball = ball.Game_Ball(self.game_main_window, self.road_height)
 		self.ball_in_jump = False
@@ -134,7 +136,11 @@ class Jump_Game:
 		if self.road_ball.get_ball_status() != 'game_over':
 			self.road_ball.ball_changing_coordinates_when_falling_from_road()
 		else:
-			self.game_over_menu.menu_displaying()
+			pressed_button_in_game_over_menu = self.game_over_menu.menu_displaying()[0]
+			if pressed_button_in_game_over_menu == 'Exit':
+				self.exit_from_game = True
+			if pressed_button_in_game_over_menu == 'New Game':
+				self.reset_game_parameters_to_start()
 
 	def game_roadline(self):
 		self.show_and_move_game_road()
