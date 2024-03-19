@@ -4,7 +4,8 @@ import menu_button_class as game_btn
 
 class Game_Menu:
 	def __init__(self, pygame_window_object = 'pygame_obj', game_display_size = (10, 10), window_title = "Test", 
-					menu_window_size = (10, 10), window_color = 'black', button_names = ['Test names']):
+					menu_window_size = (10, 10), window_color = 'black', button_names = ['Test names'],
+					static_output_fields = {"Test field": "test value"}):
 		self.main_window_pygame_object = pygame_window_object
 		self.main_window_size = game_display_size
 		self.window_title = window_title
@@ -12,6 +13,7 @@ class Game_Menu:
 		self.window_color = window_color
 		self.button_names = button_names
 		self.menu_buttons = self.get_buttons()
+		self.output_info_fields = static_output_fields
 
 	def menu_displaying(self):
 		font_of_text_in_window = pygame.font.Font('freesansbold.ttf', 20)
@@ -25,6 +27,8 @@ class Game_Menu:
 			window_title_Rect = window_title.get_rect()
 			window_title_Rect.center = window_title_XY_center
 			self.main_window_pygame_object.blit(window_title, window_title_Rect)
+
+			self.output_information_fields_from_game()
 
 			for i in range(len(self.menu_buttons)):
 				self.menu_buttons[i].show_game_button()
@@ -82,3 +86,27 @@ class Game_Menu:
 		print('FINISH of creation menu buttons...')
 		print([btn.get_button_parameters() for btn in menu_buttons])
 		return menu_buttons
+
+	# TODO: need to tuning position coordinates for output info fields.
+	def output_information_fields_from_game(self):
+		output_info_field_block_width_height = (60, 45)
+		font_of_text_in_output_info_block = pygame.font.Font('freesansbold.ttf', 15)
+		
+		for field_name in self.output_info_fields:
+			output_info_field_block_coordinates = [self.display_size[0], 0,
+												 self.display_size[0] - output_info_field_block_width_height[0],
+												 output_info_field_block_width_height[1]]
+			pygame.draw.rect(self.main_window_pygame_object, (30, 30, 30), output_field_block_width_height)
+
+			output_info_field_Block_title = font_of_text_in_output_info_block.render(field_name, True, 
+																			(100, 250, 150), (100, 100, 100))
+			output_info_field_Block_Title_Rect = output_info_field_Block_title.get_rect()
+			output_info_field_Block_Title_Rect.center = (X, Y)
+			self.main_window_pygame_object.blit(output_info_field_Block_title, output_info_field_Block_Title_Rect)
+			
+			
+			output_info_field_value = font_of_text_in_output_info_block.render(self.output_info_fields[field_name], 
+																			True, (150, 200, 100), (100, 100, 100))
+			output_info_field_value_Rect = output_info_field_value.get_rect()
+			output_info_field_value_Rect.center = (X, Y)
+			self.main_window_pygame_object.blit(output_info_field_value, output_info_field_value_Rect)
