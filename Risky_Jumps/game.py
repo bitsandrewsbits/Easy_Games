@@ -35,8 +35,6 @@ class Jump_Game:
 					                     (300, 200), (100, 100, 100), ['Start'])
 		self.exit_menu = menu.Game_Menu(self.game_main_window, self.display_size, "Pause", 
 					                     (300, 200), (100, 100, 100), ['Exit', 'Continue', "New Game"])
-		self.game_over_menu = menu.Game_Menu(self.game_main_window, self.display_size, "Game Over", 
-										 (300, 200), (120, 140, 130), ['New Game', 'Exit'])
 
 	def init_game_parameters(self):
 		pygame.init()
@@ -136,7 +134,9 @@ class Jump_Game:
 		if self.road_ball.get_ball_status() != 'game_over':
 			self.road_ball.ball_changing_coordinates_when_falling_from_road()
 		else:
-			pressed_button_in_game_over_menu = self.game_over_menu.menu_displaying()[0]
+			game_over_menu = menu.Game_Menu(self.game_main_window, self.display_size, "Game Over", 
+					(300, 200), (120, 140, 130), ['New Game', 'Exit'], {"Passed Distance:": self.road_distance})
+			pressed_button_in_game_over_menu = game_over_menu.menu_displaying()[0]
 			if pressed_button_in_game_over_menu == 'Exit':
 				self.exit_from_game = True
 			if pressed_button_in_game_over_menu == 'New Game':
