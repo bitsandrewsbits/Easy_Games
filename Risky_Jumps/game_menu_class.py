@@ -95,11 +95,11 @@ class Game_Menu:
 		output_info_field_block_width_height = (150, 45)
 		font_of_text_in_output_info_block = pygame.font.Font('freesansbold.ttf', 15)
 		
-		# TODO: think and create way to show more than 1 output field right on menu.(index for positions)
+		
 		temp_i = 0
 		for field_name in self.output_info_fields:
 			output_info_field_block_coordinates = [
-				window_menu_start_X_coordinate + 10, 
+				window_menu_start_X_coordinate + (output_info_field_block_width_height[0] + 15) * temp_i + 10, 
 				window_menu_start_Y_coordinate + self.menu_window_width_height[1] // 2 + 30,
 				output_info_field_block_width_height[0], output_info_field_block_width_height[1]]
 			
@@ -122,3 +122,5 @@ class Game_Menu:
 						output_info_field_block_coordinates[1] + 35)
 
 			self.main_window_pygame_object.blit(output_info_field_value, output_info_field_value_Rect)
+
+			temp_i += 1

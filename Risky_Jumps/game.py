@@ -30,6 +30,7 @@ class Jump_Game:
 		self.road_ball = ball.Game_Ball(self.game_main_window, self.road_height)
 		self.ball_in_jump = False
 		self.ball_falling_cause_game_over = False
+		self.amount_of_jumps = 0
 		self.iterations_per_second = 40
 		self.start_menu = menu.Game_Menu(self.game_main_window, self.display_size, "Start", 
 					                     (300, 200), (100, 100, 100), ['Start'])
@@ -91,6 +92,7 @@ class Jump_Game:
 		self.ball_in_jump = False
 		self.ball_falling_cause_game_over = False
 		self.iterations_per_second = 40
+		self.amount_of_jumps = 0
 
 	def game_interface(self):
 		self.game_main_window.fill(self.display_rgb_color)
@@ -116,6 +118,7 @@ class Jump_Game:
 			if self.road_ball.get_ball_jump_status() == 'Ball_jumped':
 				self.ball_in_jump = False
 				self.road_ball.set_new_current_ball_Y_center_coordinate()
+				self.amount_of_jumps += 1
 
 	def check_ball_coordinates_when_need_to_fall(self):
 		ball_succesful_jumped_and_on_the_road = True
@@ -135,7 +138,8 @@ class Jump_Game:
 			self.road_ball.ball_changing_coordinates_when_falling_from_road()
 		else:
 			game_over_menu = menu.Game_Menu(self.game_main_window, self.display_size, "Game Over", 
-					(300, 200), (120, 140, 130), ['New Game', 'Exit'], {"Passed Distance:": self.road_distance})
+								(350, 200), (120, 140, 130), ['New Game', 'Exit'], 
+								{"Passed Distance:": self.road_distance, "Jumps amount:": self.amount_of_jumps})
 			pressed_button_in_game_over_menu = game_over_menu.menu_displaying()[0]
 			if pressed_button_in_game_over_menu == 'Exit':
 				self.exit_from_game = True
