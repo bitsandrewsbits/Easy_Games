@@ -36,8 +36,12 @@ class Jump_Game:
 					                     (300, 200), (100, 100, 100), ['Start'])
 		self.exit_menu = menu.Game_Menu(self.game_main_window, self.display_size, "Pause", 
 					                     (300, 200), (100, 100, 100), ['Exit', 'Continue', "New Game"])
+		self.icon_image = "risky_jumps_game_icon.png"
 
 	def init_game_parameters(self):
+		pygame.display.set_caption('Risky Jumps')
+		game_icon = pygame.image.load(self.icon_image)
+		pygame.display.set_icon(game_icon)
 		pygame.init()
 
 	def start_game(self):
