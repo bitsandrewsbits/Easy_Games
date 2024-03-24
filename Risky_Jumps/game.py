@@ -58,6 +58,7 @@ class Jump_Game:
 				if game_event.type == pygame.KEYDOWN:
 					if game_event.key == pygame.K_UP and self.check_ball_coordinates_when_need_to_fall() != 'ball_falling_cause_game_over':
 						self.ball_in_jump = True
+						self.ball_start_jumping_sound()
 					if game_event.key == pygame.K_ESCAPE:
 						menu_button_name_and_status = self.exit_menu.menu_displaying()
 						if menu_button_name_and_status[1] == True and menu_button_name_and_status[0] == 'Exit':
@@ -149,6 +150,11 @@ class Jump_Game:
 				self.exit_from_game = True
 			if pressed_button_in_game_over_menu == 'New Game':
 				self.reset_game_parameters_to_start()
+
+	def ball_start_jumping_sound(self):
+		ball_jumping_sound = pygame.mixer.Sound("ball_jumped.wav")
+		pygame.mixer.Sound.play(ball_jumping_sound)
+		pygame.mixer.music.stop()
 
 	def game_roadline(self):
 		self.show_and_move_game_road()
