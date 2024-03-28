@@ -12,17 +12,19 @@ class Arithmetic_Obstacle_Block:
 		self.pygame_window_obj = pygame_window_object
 		self.main_game_window_width_height = main_game_window_size
 		self.roadline_XY_pairs_of_coordinates = road_XY_coordinates
-		self.road_XY_pairs_of_coordinates_for_block = self.define_road_XY_coordinates_for_block_on_road()
+		self.road_XY_pairs_of_coordinates_for_block = []
 		self.randomly_choosed_XY_pair_for_block = self.get_randomly_choosed_XY_pair_of_roadline_for_block()
+		print('\nBlock coordinates:', self.randomly_choosed_XY_pair_for_block)
 		self.left_math_operand = randint(10, 60)
 		self.math_operator = '+'
 		self.right_math_operand = randint(10, 60)
 		self.width_of_block = self.left_math_operand * 2 
 		self.height_of_block = self.right_math_operand * 2
-		self.block_color_in_RGB = (10, 20, 90)
+		self.block_color_in_RGB = (140, 190, 200)
 		self.block_text_color_in_RGB = (200, 200, 200)
-		self.block_parameters_for_drawing = (self.road_XY_coordinates_for_block[0], 
-			self.road_XY_coordinates_for_block[1] + self.height_of_block, self.width_of_block, self.height_of_block)
+		self.block_parameters_for_drawing = [self.randomly_choosed_XY_pair_for_block[0], 
+			self.randomly_choosed_XY_pair_for_block[1] - self.height_of_block, self.width_of_block, 
+			self.height_of_block]
 
 	def define_road_XY_coordinates_for_block_on_road(self):
 		for road_XY_pair in self.roadline_XY_pairs_of_coordinates:
@@ -30,7 +32,11 @@ class Arithmetic_Obstacle_Block:
 				self.road_XY_pairs_of_coordinates_for_block.append(road_XY_pair)
 
 	def get_randomly_choosed_XY_pair_of_roadline_for_block(self):
-		return self.road_XY_pairs_of_coordinates_for_block[randint(0, len(self.road_XY_coordinates_for_block) - 1)]
+		self.define_road_XY_coordinates_for_block_on_road()
+		return self.road_XY_pairs_of_coordinates_for_block[randint(0, len(self.road_XY_pairs_of_coordinates_for_block) - 1)]
 
 	def draw_block_on_game_road(self):
 		pg.draw.rect(self.pygame_window_obj, self.block_color_in_RGB, self.block_parameters_for_drawing)
+
+	def set_new_X_coordinate_when_block_moving(self):
+		self.block_parameters_for_drawing[0] -= 1

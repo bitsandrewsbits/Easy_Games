@@ -8,6 +8,7 @@ from random import randint
 import road_ball as ball
 import game_menu_class as menu
 import menu_button_class as button
+import arithmetic_block_obstacle_class as block_obsticle
 
 class Jump_Game:
 	def __init__(self, width_height_display = (800, 300)):
@@ -37,6 +38,7 @@ class Jump_Game:
 		self.exit_menu = menu.Game_Menu(self.game_main_window, self.display_size, "Pause", 
 					                     (300, 200), (100, 100, 100), ['Exit', 'Continue', "New Game"])
 		self.icon_image = "risky_jumps_game_icon.png"
+		self.arithmatic_block_obstacle = 0
 
 	def init_game_parameters(self):
 		pygame.display.set_caption('Risky Jumps')
@@ -111,6 +113,7 @@ class Jump_Game:
 
 		self.show_road_passed_distance()
 		self.game_roadline()
+		self.arithmatic_block_obstacle_on_road()
 
 	def check_on_ball_jump(self):
 		self.road_ball.set_new_game_FPS(self.iterations_per_second)
@@ -158,6 +161,11 @@ class Jump_Game:
 
 	def game_roadline(self):
 		self.show_and_move_game_road()
+
+	def arithmatic_block_obstacle_on_road(self):
+		if self.arithmatic_block_obstacle != 0:
+			self.arithmatic_block_obstacle.draw_block_on_game_road()
+			self.arithmatic_block_obstacle.set_new_X_coordinate_when_block_moving()
 
 	def create_lines_coordinates(self, start_road_coordinates = 1, end_road_coordinates = 1):
 		result_lines_coordinates = []
@@ -250,6 +258,9 @@ class Jump_Game:
 			tmp_road_coordinates = self.create_lines_coordinates(self.display_size[0], 2 * self.display_size[0])
 			self.roadlines_coordinates += tmp_road_coordinates
 			print(self.roadlines_coordinates)
+		if self.road_distance % 1000 == 0:
+			self.arithmatic_block_obstacle = block_obsticle.Arithmetic_Obstacle_Block(self.game_main_window, 
+																self.display_size, self.roadlines_coordinates)
 
 	def set_up_start_roadline_coordinates(self):
 		self.roadlines_coordinates = self.create_lines_coordinates(0, self.display_size[0] - self.hole_size)
