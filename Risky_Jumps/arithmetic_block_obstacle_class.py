@@ -1,4 +1,4 @@
-# feature of game - adding random arithmatic block obstacle on game road.
+# feature of game - adding random arithmetic block obstacle on game road.
 # if you resolve right - block will escape and you can move next. 
 # But if not - your ball will be shift by this block. 
 # And when coordinate on the road of ball will be less then 0 - then game over.
@@ -40,3 +40,6 @@ class Arithmetic_Obstacle_Block:
 
 	def set_new_X_coordinate_when_block_moving(self):
 		self.block_parameters_for_drawing[0] -= 1
+
+	def get_block_parameters(self):
+		return self.block_parameters_for_drawing
