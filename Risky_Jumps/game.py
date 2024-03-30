@@ -105,6 +105,7 @@ class Jump_Game:
 	def game_interface(self):
 		self.game_main_window.fill(self.display_rgb_color)
 
+		self.set_new_ball_XY_coordinates_when_collision_with_arithmetic_block()
 		self.check_on_ball_jump()
 
 		if self.check_ball_coordinates_when_need_to_fall() == 'ball_falling_cause_game_over':
@@ -115,6 +116,10 @@ class Jump_Game:
 		self.show_road_passed_distance()
 		self.game_roadline()
 		self.arithmetic_blocks_obstacle_on_road()
+
+	def set_new_ball_XY_coordinates_when_collision_with_arithmetic_block(self):
+		if self.arithmetic_blocks_obstacle != []:
+			self.road_ball.when_collision_with_block_set_new_ball_coordinates(self.arithmetic_blocks_obstacle[0])
 
 	def check_on_ball_jump(self):
 		self.road_ball.set_new_game_FPS(self.iterations_per_second)

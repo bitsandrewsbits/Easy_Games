@@ -2,6 +2,7 @@
 
 import pygame as pg
 import defining_optimal_speed_jump as opt_jump
+import arithmetic_block_obstacle_class as arith_block
 
 class Game_Ball:
 	def __init__(self, screen_surface, start_road_height = 0, radius = 10, ball_color = 'yellow'):
@@ -145,6 +146,18 @@ class Game_Ball:
 
 	def changing_ball_jump_total_distance(self):
 		self.ball_jump_total_distance += (self.height_of_road - self.start_height_of_road)
+
+	def ball_collision_with_arithmetic_block(self, arithmetic_block_obj = 'object'):
+		arithmetic_block_XY_coordinates = arithmetic_block_obj.get_block_parameters()[:2]
+		if self.ball_center_coordinates[0] + self.ball_radius >= arithmetic_block_XY_coordinates[0]:
+			return (True, arithmetic_block_XY_coordinates[0] - self.ball_radius)
+		else:
+			return (False, 'object absent')
+
+	def when_collision_with_block_set_new_ball_coordinates(self, arith_block_obj):
+		ball_collision_with_arithmetic_block_and_new_XY_for_ball = self.ball_collision_with_arithmetic_block(arith_block_obj)
+		if ball_collision_with_arithmetic_block_and_new_XY_for_ball[0]:
+			self.ball_center_coordinates[0] = ball_collision_with_arithmetic_block_and_new_XY_for_ball[1]
 
 
 
