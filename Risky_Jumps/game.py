@@ -60,7 +60,8 @@ class Jump_Game:
 				if game_event.type == pygame.KEYDOWN:
 					if game_event.key == pygame.K_UP and self.check_ball_coordinates_when_need_to_fall() != 'ball_falling_cause_game_over':
 						self.ball_in_jump = True
-						self.ball_start_jumping_sound()
+						self.road_ball.get_arithmetic_block_object(self.arithmetic_blocks_obstacle)
+						# self.ball_start_jumping_sound()
 					if game_event.key == pygame.K_ESCAPE:
 						menu_button_name_and_status = self.exit_menu.menu_displaying()
 						if menu_button_name_and_status[1] == True and menu_button_name_and_status[0] == 'Exit':
@@ -127,6 +128,7 @@ class Jump_Game:
 			self.road_ball.draw_ball()
 		elif self.ball_in_jump:
 			if self.road_ball.get_ball_jump_status() == 'Ball_in_jump':
+				self.set_new_ball_XY_coordinates_when_collision_with_arithmetic_block()
 				self.check_is_road_height_changed()
 				self.road_ball.ball_jump()
 			if self.road_ball.get_ball_jump_status() == 'Ball_jumped':

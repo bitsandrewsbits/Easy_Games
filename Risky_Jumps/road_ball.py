@@ -76,16 +76,9 @@ class Game_Ball:
 		if self.ball_move_distance + self.ball_jump_speed >= self.ball_jump_total_distance or \
 		self.height_of_road <= self.ball_center_coordinates[1] + self.ball_radius:
 			print('Ball center coordinates after jump:', self.ball_center_coordinates)
-			self.set_new_current_ball_Y_center_coordinate()
-			self.set_new_start_ball_Y_center_coordinate()
-			self.ball_jump_to_down = False
-			self.ball_jump_to_up = True
-			self.ball_move_distance = 0
-			self.ball_jump_speed = self.start_ball_jump_speed
-			self.ball_status = 'ball_jumped'
-			self.need_to_change_ball_Y_coordinate = True
-			self.start_height_of_road = self.height_of_road
-			self.ball_jump_total_distance = 120
+			self.set_new_current_ball_Y_center_coordinate_when_road_height_changed()
+			self.set_new_start_ball_Y_center_coordinate_when_road_height_changed()
+			self.set_initial_ball_parameters_for_jump()
 			print('Ball start Y coordinate for jump =', self.ball_start_center_coordinates[1])
 			print('Road height =', self.height_of_road)
 			print('===Ball Jumped!===')
@@ -93,6 +86,22 @@ class Game_Ball:
 		else:
 			self.ball_status = 'ball_in_jump'
 			return 'Ball_in_jump'
+
+	def set_initial_ball_parameters_for_jump(self):
+		self.ball_jump_to_down = False
+		self.ball_jump_to_up = True
+		self.ball_move_distance = 0
+		self.ball_jump_speed = self.start_ball_jump_speed
+		self.ball_status = 'ball_jumped'
+		self.need_to_change_ball_Y_coordinate = True
+		self.start_height_of_road = self.height_of_road
+		self.ball_jump_total_distance = 120
+
+	def get_arithmetic_block_object(self, arithmetic_blocks):
+		if arithmetic_blocks != []:
+			return arithmetic_blocks[0]
+		else:
+			return 'blocks dont exist yet'
 
 	def get_ball_status(self):
 		return self.ball_status
@@ -123,11 +132,11 @@ class Game_Ball:
 	def set_road_height(self, road_Y_coordinate):
 		self.height_of_road = road_Y_coordinate
 
-	def set_new_start_ball_Y_center_coordinate(self):
+	def set_new_start_ball_Y_center_coordinate_when_road_height_changed(self):
 		new_start_ball_Y_coordinate = self.ball_start_center_coordinates[1] + (self.height_of_road - self.start_height_of_road)
 		self.ball_start_center_coordinates[1] = new_start_ball_Y_coordinate
 
-	def set_new_current_ball_Y_center_coordinate(self):
+	def set_new_current_ball_Y_center_coordinate_when_road_height_changed(self):
 		self.ball_center_coordinates[1] = self.ball_start_center_coordinates[1]
 
 	def ball_changing_coordinates_when_falling_from_road(self):
@@ -147,17 +156,26 @@ class Game_Ball:
 	def changing_ball_jump_total_distance(self):
 		self.ball_jump_total_distance += (self.height_of_road - self.start_height_of_road)
 
-	def ball_collision_with_arithmetic_block(self, arithmetic_block_obj = 'object'):
-		arithmetic_block_XY_coordinates = arithmetic_block_obj.get_block_parameters()[:2]
-		if self.ball_center_coordinates[0] + self.ball_radius >= arithmetic_block_XY_coordinates[0]:
-			return (True, arithmetic_block_XY_coordinates[0] - self.ball_radius)
-		else:
-			return (False, 'object absent')
+	def ball_collision_with_arithmetic_block(self, arithmetic_block_obj):
+		arithmetic_block_parameters = arithmetic_block_obj.get_block_parameters()
+		aritmetic_block_width = arithmetic_block_parameters[2]
+		
+		if self.ball_center_coordinates[1] + self.ball_radius <= arithmetic_block_parameters[1]:
+			if self.ball_center_coordinates[0] + self.ball_radius >= arithmetic_block_parameters[0] and \
+			self.ball_center_coordinates[0] + self.ball_radius <= arithmetic_block_parameters[0] + aritmetic_block_width:
+		   		# return (True, [arithmetic_block_parameters[0] - self.ball_radius, self.ball_center_coordinates[1]])
+		   		return (True, self.ball_center_coordinates)
 
-	def when_collision_with_block_set_new_ball_coordinates(self, arith_block_obj):
+		elif self.ball_center_coordinates[0] + self.ball_radius >= arithmetic_block_parameters[0]:
+			return (True, [arithmetic_block_parameters[0] - self.ball_radius, self.ball_center_coordinates[1]])
+
+		return (False, 'object absent')
+
+	def when_collision_with_block_set_new_ball_coordinates(self):
+		arithmetic_block_obj = self.get_arithmetic_block_object()
 		ball_collision_with_arithmetic_block_and_new_XY_for_ball = self.ball_collision_with_arithmetic_block(arith_block_obj)
 		if ball_collision_with_arithmetic_block_and_new_XY_for_ball[0]:
-			self.ball_center_coordinates[0] = ball_collision_with_arithmetic_block_and_new_XY_for_ball[1]
+			self.ball_center_coordinates = ball_collision_with_arithmetic_block_and_new_XY_for_ball[1]
 
 
 
