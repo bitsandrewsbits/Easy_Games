@@ -32,6 +32,8 @@ class Game_Ball:
 		self.acceleration_of_ball_speed_to_up = -0.2    #pixels/frame^2
 		self.acceleration_of_ball_speed_to_down = 0.075   # only a = g in pixels/frame^2, g = 10 pixels/c^2
 
+		self.arithmetic_block = ''
+
 	def draw_ball(self):
 		pg.draw.circle(self.screen_surface, self.ball_color, self.ball_center_coordinates, self.ball_radius)
 
@@ -73,6 +75,16 @@ class Game_Ball:
 		self.ball_center_coordinates[0] -= 1
 
 	def get_ball_jump_status(self):
+		if self.arithmetic_block != '':
+			ball_collision_with_block = self.ball_collision_with_arithmetic_block(self.arithmetic_block)
+			arithm_block_height = self.arithmetic_block.get_block_parameters()[3]
+			if ball_collision_with_block[0] and \
+			self.height_of_road - arithm_block_height <= self.ball_center_coordinates[1] + self.ball_radius and \
+			self.ball_jump_to_down:
+				self.when_collision_with_block_set_new_ball_coordinates(self.ball_center_coordinates)
+				self.set_initial_ball_parameters_for_jump()
+				return 'Ball_jumped'
+
 		if self.ball_move_distance + self.ball_jump_speed >= self.ball_jump_total_distance or \
 		self.height_of_road <= self.ball_center_coordinates[1] + self.ball_radius:
 			print('Ball center coordinates after jump:', self.ball_center_coordinates)
@@ -99,7 +111,7 @@ class Game_Ball:
 
 	def get_arithmetic_block_object(self, arithmetic_blocks):
 		if arithmetic_blocks != []:
-			return arithmetic_blocks[0]
+			self.arithmetic_block = arithmetic_blocks[0]
 		else:
 			return 'blocks dont exist yet'
 
@@ -163,7 +175,6 @@ class Game_Ball:
 		if self.ball_center_coordinates[1] + self.ball_radius <= arithmetic_block_parameters[1]:
 			if self.ball_center_coordinates[0] + self.ball_radius >= arithmetic_block_parameters[0] and \
 			self.ball_center_coordinates[0] + self.ball_radius <= arithmetic_block_parameters[0] + aritmetic_block_width:
-		   		# return (True, [arithmetic_block_parameters[0] - self.ball_radius, self.ball_center_coordinates[1]])
 		   		return (True, self.ball_center_coordinates)
 
 		elif self.ball_center_coordinates[0] + self.ball_radius >= arithmetic_block_parameters[0]:
@@ -171,11 +182,9 @@ class Game_Ball:
 
 		return (False, 'object absent')
 
-	def when_collision_with_block_set_new_ball_coordinates(self):
-		arithmetic_block_obj = self.get_arithmetic_block_object()
-		ball_collision_with_arithmetic_block_and_new_XY_for_ball = self.ball_collision_with_arithmetic_block(arith_block_obj)
-		if ball_collision_with_arithmetic_block_and_new_XY_for_ball[0]:
-			self.ball_center_coordinates = ball_collision_with_arithmetic_block_and_new_XY_for_ball[1]
+	def when_collision_with_block_set_new_ball_coordinates(self, new_ball_coordinates):
+		self.ball_center_coordinates = new_ball_coordinates
+		self.ball_start_center_coordinates = self.ball_center_coordinates
 
 
 
