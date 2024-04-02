@@ -121,6 +121,8 @@ class Jump_Game:
 		if self.arithmetic_blocks_obstacle != []:
 			ball_collision_with_block = self.road_ball.ball_collision_with_arithmetic_block(self.arithmetic_blocks_obstacle[0])
 			if ball_collision_with_block[0]:
+				print('Warning. Block Collision!')
+				print('Ball coordinates:', self.road_ball.get_ball_center_coordinates())
 				self.road_ball.when_collision_with_block_set_new_ball_coordinates(ball_collision_with_block[1])
 
 	def check_on_ball_jump(self):
