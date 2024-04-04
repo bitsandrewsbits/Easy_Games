@@ -119,10 +119,7 @@ class Jump_Game:
 
 	def set_new_ball_XY_coordinates_when_collision_with_arithmetic_block(self):
 		if self.arithmetic_blocks_obstacle != []:
-			ball_collision_with_block = self.road_ball.ball_collision_with_arithmetic_block(self.arithmetic_blocks_obstacle[0])
-			if ball_collision_with_block[0]:
-				print('Ball coordinates:', self.road_ball.get_ball_center_coordinates())
-				self.road_ball.when_collision_with_block_set_new_ball_coordinates(ball_collision_with_block[1])
+			self.road_ball.check_ball_collision_with_arithmetic_block_and_set_new_ball_XY(self.arithmetic_blocks_obstacle[0])
 
 	def check_on_ball_jump(self):
 		self.road_ball.set_new_game_FPS(self.iterations_per_second)
@@ -262,7 +259,7 @@ class Jump_Game:
 		if self.road_distance % self.display_size[0] == 0 and self.road_distance != 0:
 			print('Distance:', self.road_distance)
 			print('Adding new hole...')
-			self.holes_amount += 1
+			self.holes_amount = 0  ########################### For easy Testing !!!
 			print('Amount of holes =', self.holes_amount)
 			self.iterations_per_second += 10
 
