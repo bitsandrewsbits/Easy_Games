@@ -127,21 +127,27 @@ class Jump_Game:
 			self.set_new_ball_XY_coordinates_when_collision_with_arithmetic_block()
 			self.road_ball.draw_ball()
 		elif self.ball_in_jump:
-			if self.road_ball.get_ball_jump_status() in ('Ball_in_jump', 'Ball_in_jump_over_block'):
+			if self.road_ball.get_ball_jump_status() == 'Ball_in_jump':
 				self.road_ball.get_arithmetic_block_object(self.arithmetic_blocks_obstacle)
 				self.check_is_road_height_changed()
 				self.road_ball.ball_jump()
-			if self.road_ball.get_ball_jump_status() == 'Ball_jumped':
-				self.ball_in_jump = False
-				self.road_ball.set_new_current_ball_Y_center_coordinate_when_road_height_changed()
-				self.amount_of_jumps += 1
-			if self.road_ball.get_ball_jump_status() == 'Ball_jumped_on_block':
-				self.ball_in_jump = False
-				self.road_ball.set_new_current_ball_Y_coordinate_when_collision_with_arithmetic_block()
-				self.amount_of_jumps += 1
+				
+				if self.road_ball.get_ball_jump_status() == 'Ball_jumped':
+					self.ball_in_jump = False
+					self.road_ball.set_new_current_ball_Y_center_coordinate_when_road_height_changed()
+					self.amount_of_jumps += 1
+
+			if self.road_ball.get_ball_jump_status() == 'Ball_in_jump_over_block':
+				self.road_ball.get_arithmetic_block_object(self.arithmetic_blocks_obstacle)
+				self.check_is_road_height_changed()
+				self.road_ball.ball_jump()
+
+				if self.road_ball.get_ball_jump_status() == 'Ball_jumped_on_block':
+					self.ball_in_jump = False
+					self.road_ball.set_new_current_ball_Y_coordinate_when_collision_with_arithmetic_block()
+					self.amount_of_jumps += 1
 
 	def check_ball_coordinates_when_need_to_fall(self):
-		# ball_succesful_jumped_and_on_the_road = True
 		current_ball_X_coordinate = self.road_ball.get_ball_center_coordinates()[0]
 		current_ball_Y_coordinate = self.road_ball.get_ball_center_coordinates()[1]
 
@@ -271,7 +277,7 @@ class Jump_Game:
 		if self.road_distance % self.display_size[0] == 0 and self.road_distance != 0:
 			print('Distance:', self.road_distance)
 			print('Adding new hole...')
-			self.holes_amount = 0  ########################### For easy Testing !!!
+			self.holes_amount += 1
 			print('Amount of holes =', self.holes_amount)
 			self.iterations_per_second += 10
 
