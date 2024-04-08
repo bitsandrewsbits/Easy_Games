@@ -43,7 +43,7 @@ class Game_Ball:
 
 		if self.is_changed_road_height() and self.need_to_change_ball_Y_coordinate:
 			# print('Road height was changed... Road height =', self.height_of_road)
-			self.changing_ball_jump_total_distance()
+			self.set_new_ball_jump_total_distance_when_road_height_changed()
 			# print('Changed Jump total distance =', self.ball_jump_total_distance)
 			self.need_to_change_ball_Y_coordinate = False
 
@@ -75,7 +75,7 @@ class Game_Ball:
 		self.ball_center_coordinates[0] -= 1
 
 	def get_ball_jump_status(self):
-		if self.arithmetic_block != '':
+		if self.arithmetic_block != '' and not self.arithmetic_block_behind_ball(self.arithmetic_block):
 			self.check_ball_collision_with_arithmetic_block_and_set_new_ball_XY(self.arithmetic_block)
 			arithm_block_parameters = self.arithmetic_block.get_block_parameters()
 			# if self.ball_jump_to_down:
@@ -99,10 +99,18 @@ class Game_Ball:
 				self.set_new_current_ball_Y_coordinate_when_collision_with_arithmetic_block()
 				print('Ball start XY coordinates(after jump on block):', self.ball_start_center_coordinates)
 				self.set_initial_ball_parameters_for_jump()
+				self.ball_status = 'ball_on_block'
 				return 'Ball_jumped_on_block'
 			elif self.ball_over_arithmetic_block_surface(self.arithmetic_block) and self.ball_jump_to_down:
 				self.ball_status = 'ball_in_jump_over_block'
 				return 'Ball_in_jump_over_block'
+		else:
+			self.set_new_ball_jump_total_distance_when_block_behind_ball(self.arithmetic_block)
+			print('Block behind Ball!')
+			print('Ball XY coordinates(current):', self.ball_center_coordinates)
+			print('Ball XY coordinates(start after jump):', self.ball_start_center_coordinates)
+			print('Road height =', self.height_of_road)
+			print('Ball status =', self.ball_status)
 
 		if self.ball_move_distance + self.ball_jump_speed >= self.ball_jump_total_distance or \
 		self.height_of_road <= self.ball_center_coordinates[1] + self.ball_radius:
@@ -184,8 +192,20 @@ class Game_Ball:
 		else:
 			return False
 
-	def changing_ball_jump_total_distance(self):
+	def set_new_ball_jump_total_distance_when_road_height_changed(self):
 		self.ball_jump_total_distance += (self.height_of_road - self.start_height_of_road)
+
+	def set_new_ball_jump_total_distance_when_block_behind_ball(self, arithmetic_block_obj):
+		block_parameters = arithmetic_block_obj.get_block_parameters()
+		block_Y_coordinate = block_parameters[1]
+		self.ball_jump_total_distance += (self.height_of_road - block_Y_coordinate)
+
+	def arithmetic_block_behind_ball(self, arithmetic_block_obj):
+		block_parameters = arithmetic_block_obj.get_block_parameters()
+		if self.ball_center_coordinates[0] + self.ball_radius > block_parameters[0] + block_parameters[2]:
+			return True
+		else:
+			return False
 
 	def check_ball_collision_with_arithmetic_block_and_set_new_ball_XY(self, arithmetic_block_obj):
 		arithmetic_block_parameters = arithmetic_block_obj.get_block_parameters()
@@ -193,15 +213,15 @@ class Game_Ball:
 		
 		if self.ball_center_coordinates[0] + self.ball_radius > arithmetic_block_parameters[0] and \
 		self.ball_center_coordinates[1] + self.ball_radius > arithmetic_block_parameters[1] and \
-		not self.ball_over_arithmetic_block_surface(arithmetic_block_obj):
+		not self.ball_over_arithmetic_block_surface(arithmetic_block_obj) and \
+		not self.arithmetic_block_behind_ball(arithmetic_block_obj):
 			# print('*' * 20)
 			# print('Ball encounter with block wall. Changing ball X coordinate...')
 			# print('Setting up ball X coordinate =', arithmetic_block_parameters[0] - self.ball_radius)
 			# print('*' * 20)
 			self.collision_with_block_set_new_ball_coordinates(arithmetic_block_parameters[0] - self.ball_radius)
 		else:
-			current_ball_X_coordinate = self.ball_center_coordinates[0]
-			self.collision_with_block_set_new_ball_coordinates(current_ball_X_coordinate)
+			self.collision_with_block_set_new_ball_coordinates()
 
 	def collision_with_block_set_new_ball_coordinates(self, new_ball_X_coordinate = 'no_changes', 
 															new_ball_Y_coordinate = 'no_changes'):
