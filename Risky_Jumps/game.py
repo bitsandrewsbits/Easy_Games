@@ -190,18 +190,27 @@ class Jump_Game:
 
 	def arithmetic_blocks_obstacle_on_road(self):
 		if self.arithmetic_blocks_obstacle != []:
-			self.delete_arithmetic_blocks_beyond_game_screen()
+			if self.arithmetic_block_beyond_game_screen():
+				self.set_new_ball_Y_coordinate_as_correction_next_jumps()
+				self.delete_first_arithmetic_block()
 			
 			for arithmetic_block in self.arithmetic_blocks_obstacle:
 				arithmetic_block.draw_block_on_game_road()
 				arithmetic_block.set_new_X_coordinate_when_block_moving()
 
-	def delete_arithmetic_blocks_beyond_game_screen(self):
+	def arithmetic_block_beyond_game_screen(self):
 		for arithmetic_block in self.arithmetic_blocks_obstacle:
 			block_width = arithmetic_block.get_block_parameters()[2]
 			if arithmetic_block.get_block_parameters()[0] + block_width < 0:
-				self.arithmetic_blocks_obstacle.remove(arithmetic_block)
-				break
+				return True
+
+		return False
+	
+	def set_new_ball_Y_coordinate_as_correction_next_jumps(self):
+		self.road_ball.set_new_ball_Y_coordinate_as_correction()
+
+	def delete_first_arithmetic_block(self):
+		self.arithmetic_blocks_obstacle.remove(self.arithmetic_blocks_obstacle[0])
 
 	def create_lines_coordinates(self, start_road_coordinates = 1, end_road_coordinates = 1):
 		result_lines_coordinates = []

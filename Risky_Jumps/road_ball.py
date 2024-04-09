@@ -115,8 +115,13 @@ class Game_Ball:
 		if self.ball_move_distance + self.ball_jump_speed >= self.ball_jump_total_distance or \
 		self.height_of_road <= self.ball_center_coordinates[1] + self.ball_radius:
 			print('Ball center coordinates after jump:', self.ball_center_coordinates)
-			self.set_new_current_ball_Y_center_coordinate_when_road_height_changed()
-			self.set_new_start_ball_Y_center_coordinate_when_road_height_changed()
+			if not self.arithmetic_block_behind_ball(self.arithmetic_block):
+				self.set_new_start_ball_Y_center_coordinate_when_road_height_changed()
+				self.set_new_current_ball_Y_center_coordinate_when_road_height_changed()
+			else:
+				self.set_new_current_ball_Y_center_coordinate_when_ball_jumped_from_block_to_road()
+				self.set_new_start_ball_Y_coordinate_when_ball_jumped_from_block_to_road()
+
 			self.set_initial_ball_parameters_for_jump()
 			print('Ball start Y coordinate for jump =', self.ball_start_center_coordinates[1])
 			print('Road height =', self.height_of_road)
@@ -171,6 +176,9 @@ class Game_Ball:
 	def set_road_height(self, road_Y_coordinate):
 		self.height_of_road = road_Y_coordinate
 
+	def set_new_ball_Y_coordinate_as_correction(self):
+		self.ball_center_coordinates[1] += 2
+
 	def set_new_start_ball_Y_center_coordinate_when_road_height_changed(self):
 		new_start_ball_Y_coordinate = self.ball_start_center_coordinates[1] + (self.height_of_road - self.start_height_of_road)
 		self.ball_start_center_coordinates[1] = new_start_ball_Y_coordinate
@@ -199,6 +207,12 @@ class Game_Ball:
 		block_parameters = arithmetic_block_obj.get_block_parameters()
 		block_Y_coordinate = block_parameters[1]
 		self.ball_jump_total_distance += (self.height_of_road - block_Y_coordinate)
+
+	def set_new_current_ball_Y_center_coordinate_when_ball_jumped_from_block_to_road(self):
+		self.ball_center_coordinates[1] = self.height_of_road - self.ball_radius - 2
+
+	def set_new_start_ball_Y_coordinate_when_ball_jumped_from_block_to_road(self):
+		self.ball_start_center_coordinates[1] = self.ball_center_coordinates[1]
 
 	def arithmetic_block_behind_ball(self, arithmetic_block_obj):
 		block_parameters = arithmetic_block_obj.get_block_parameters()
