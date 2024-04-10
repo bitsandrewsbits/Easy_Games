@@ -32,6 +32,7 @@ class Game_Ball:
 		self.acceleration_of_ball_speed_to_up = -0.2    #pixels/frame^2
 		self.acceleration_of_ball_speed_to_down = 0.075   # only a = g in pixels/frame^2, g = 10 pixels/c^2
 
+		self.all_arithmetic_blocks_on_road = []
 		self.arithmetic_block = ''
 
 	def draw_ball(self):
@@ -106,6 +107,7 @@ class Game_Ball:
 				return 'Ball_in_jump_over_block'
 		else:
 			self.set_new_ball_jump_total_distance_when_block_behind_ball(self.arithmetic_block)
+			self.set_new_block_status_for_block_behind_ball()
 			print('Block behind Ball!')
 			print('Ball XY coordinates(current):', self.ball_center_coordinates)
 			print('Ball XY coordinates(start after jump):', self.ball_start_center_coordinates)
@@ -114,6 +116,7 @@ class Game_Ball:
 
 		if self.ball_move_distance + self.ball_jump_speed >= self.ball_jump_total_distance or \
 		self.height_of_road <= self.ball_center_coordinates[1] + self.ball_radius:
+			print(f"{self.ball_move_distance + self.ball_jump_speed} >= {self.ball_jump_total_distance} or {self.height_of_road} <= {self.ball_center_coordinates[1] + self.ball_radius}")
 			print('Ball center coordinates after jump:', self.ball_center_coordinates)
 			if not self.arithmetic_block_behind_ball(self.arithmetic_block):
 				self.set_new_start_ball_Y_center_coordinate_when_road_height_changed()
@@ -141,11 +144,25 @@ class Game_Ball:
 		self.start_height_of_road = self.height_of_road
 		self.ball_jump_total_distance = 120
 
-	def get_arithmetic_block_object(self, arithmetic_blocks):
-		if arithmetic_blocks != []:
-			self.arithmetic_block = arithmetic_blocks[0]
+	def get_all_arithmetic_blocks_and_status_for_ball(self, arithmetic_blocks):
+		self.all_arithmetic_blocks_on_road = arithmetic_blocks
+
+	def get_arithmetic_block_that_closest_to_ball(self):
+		if self.all_arithmetic_blocks_on_road != []:
+			for block in self.all_arithmetic_blocks_on_road:
+				if block[1] == 'Ahead':
+					self.arithmetic_block = block[0]
+					break
 		else:
 			return 'blocks dont exist yet'
+
+	def set_new_block_status_for_block_behind_ball(self):
+		for block in self.all_arithmetic_blocks_on_road:
+			if self.arithmetic_block_behind_ball(block[0]):
+				block[1] = 'Behind'
+
+	def update_blocks_status_after_ball_jumping(self):
+		return self.all_arithmetic_blocks_on_road
 
 	def get_ball_status(self):
 		return self.ball_status
@@ -209,7 +226,8 @@ class Game_Ball:
 		self.ball_jump_total_distance += (self.height_of_road - block_Y_coordinate)
 
 	def set_new_current_ball_Y_center_coordinate_when_ball_jumped_from_block_to_road(self):
-		self.ball_center_coordinates[1] = self.height_of_road - self.ball_radius - 2
+		new_current_ball_Y_center_coordinate = self.height_of_road - self.ball_radius
+		self.ball_center_coordinates[1] = new_current_ball_Y_center_coordinate
 
 	def set_new_start_ball_Y_coordinate_when_ball_jumped_from_block_to_road(self):
 		self.ball_start_center_coordinates[1] = self.ball_center_coordinates[1]
