@@ -19,7 +19,7 @@ class Arithmetic_Obstacle_Block:
 		self.math_operator = '+'
 		self.right_math_operand = randint(10, 30)
 		self.width_of_block = self.left_math_operand * 3
-		self.height_of_block = self.right_math_operand
+		self.height_of_block = self.right_math_operand + 2
 		self.block_color_in_RGB = (140, 190, 200)
 		self.block_text_color_in_RGB = (200, 200, 200)
 		self.block_parameters_for_drawing = [self.randomly_choosed_XY_pair_for_block[0], 

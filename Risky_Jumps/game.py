@@ -193,7 +193,7 @@ class Jump_Game:
 	def arithmetic_blocks_obstacle_on_road(self):
 		if self.arithmetic_blocks_and_status_for_ball != []:
 			if self.arithmetic_block_beyond_game_screen():
-				self.set_new_ball_Y_coordinate_as_correction_for_next_jumps()
+				# self.set_new_ball_Y_coordinate_as_correction_for_next_jumps()
 				self.delete_arithmetic_block_beyond_game_screen()
 			
 			for arithmetic_block in self.arithmetic_blocks_and_status_for_ball:
@@ -208,8 +208,8 @@ class Jump_Game:
 
 		return False
 	
-	def set_new_ball_Y_coordinate_as_correction_for_next_jumps(self):
-		self.road_ball.set_new_ball_Y_coordinate_as_correction()
+	# def set_new_ball_Y_coordinate_as_correction_for_next_jumps(self):
+	# 	self.road_ball.set_new_ball_Y_coordinate_as_correction()
 
 	def delete_arithmetic_block_beyond_game_screen(self):
 		self.arithmetic_blocks_and_status_for_ball.remove(self.arithmetic_blocks_and_status_for_ball[0])
@@ -305,7 +305,7 @@ class Jump_Game:
 			tmp_road_coordinates = self.create_lines_coordinates(self.display_size[0], 2 * self.display_size[0])
 			self.roadlines_coordinates += tmp_road_coordinates
 			print(self.roadlines_coordinates)
-		if self.road_distance % 500 == 0:
+		if self.road_distance % 800 == 0:
 			new_block_obstacle = block_obsticle.Arithmetic_Obstacle_Block(self.game_main_window, 
 																self.display_size, self.roadlines_coordinates)
 			self.arithmetic_blocks_and_status_for_ball.append([new_block_obstacle, 'Ahead'])
