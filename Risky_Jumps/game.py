@@ -123,6 +123,7 @@ class Jump_Game:
 
 	def check_on_ball_jump(self):
 		self.road_ball.set_new_game_FPS(self.iterations_per_second)
+		self.road_ball.check_game_FPS_changing()
 		self.road_ball.get_all_arithmetic_blocks_and_status_for_ball(self.arithmetic_blocks_and_status_for_ball)
 		self.arithmetic_blocks_and_status_for_ball = self.road_ball.update_blocks_status_after_ball_jumping()
 		self.road_ball.get_arithmetic_block_that_closest_to_ball()
@@ -290,7 +291,8 @@ class Jump_Game:
 			print('Adding new hole...')
 			self.holes_amount += 1
 			print('Amount of holes =', self.holes_amount)
-			self.iterations_per_second += 10
+		if self.road_distance % 100 == 0 and self.road_distance != 0:
+			self.iterations_per_second += 1
 
 	def manage_road_coordinates(self):
 		if self.road_distance == 0:

@@ -39,9 +39,6 @@ class Game_Ball:
 		pg.draw.circle(self.screen_surface, self.ball_color, self.ball_center_coordinates, self.ball_radius)
 
 	def ball_jump(self):
-		if self.game_FPS_changed():
-			self.set_new_ball_accelerations_when_jumping_for_same_moving()
-
 		if self.is_changed_road_height() and self.need_to_change_ball_Y_coordinate:
 			# print('Road height was changed... Road height =', self.height_of_road)
 			self.set_new_ball_jump_total_distance_when_road_height_changed()
@@ -187,22 +184,27 @@ class Game_Ball:
 	def set_new_game_FPS(self, game_fps = 40):
 		self.new_ball_jump_FPS = game_fps
 
-	def game_FPS_changed(self):
+	def check_game_FPS_changing(self):
 		if self.start_ball_jump_FPS != self.new_ball_jump_FPS:
+			self.set_new_start_game_FPS(self.new_ball_jump_FPS)
+			self.set_new_ball_accelerations_for_jump_in_diff_FPS_for_same_moving()
 			return True
 		else:
 			return False
 
-	def set_new_ball_accelerations_when_jumping_for_same_moving(self):
+	def set_new_start_game_FPS(self, new_fps = 10):
+		self.start_ball_jump_FPS = new_fps
+
+	def set_new_ball_accelerations_for_jump_in_diff_FPS_for_same_moving(self):
 		temp_up_jump_parameters = opt_jump.get_acceleration_v0_steps_for_S_and_FPS_up_jump(self.new_ball_jump_FPS)
 		self.start_ball_jump_speed = temp_up_jump_parameters[0] - 0.5
+		self.ball_jump_speed = self.start_ball_jump_speed
 		print('New ball jump speed(up) =', self.start_ball_jump_speed)
 		self.acceleration_of_ball_speed_to_up = temp_up_jump_parameters[1]
 		temp_down_jump_parameters = opt_jump.get_acceleration_steps_for_S_and_FPS_down_jump(self.new_ball_jump_FPS)
 		self.acceleration_of_ball_speed_to_down = temp_down_jump_parameters[0]
 		print('New ball acceleration_of_ball_speed_to_up =', self.acceleration_of_ball_speed_to_up)
 		print('New ball acceleration_of_ball_speed_to_down =', self.acceleration_of_ball_speed_to_down)
-		self.start_ball_jump_FPS = self.new_ball_jump_FPS
 
 	def set_road_height(self, road_Y_coordinate):
 		self.height_of_road = road_Y_coordinate
