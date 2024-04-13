@@ -27,10 +27,10 @@ class Game_Ball:
 
 		self.time_for_1_frame_in_game = 1 / self.new_ball_jump_FPS
 		self.start_ball_jump_speed = 5
-		self.ball_jump_speed = 5   # pixels/frame (-0.5 from return func)
+		self.ball_jump_speed = 5   # pixels/frame
 		
-		self.acceleration_of_ball_speed_to_up = -0.2    #pixels/frame^2
-		self.acceleration_of_ball_speed_to_down = 0.075   # only a = g in pixels/frame^2, g = 10 pixels/c^2
+		self.acceleration_of_ball_speed_to_up = -0.2    # pixels/frame^2
+		self.acceleration_of_ball_speed_to_down = 0.0625   # a in pixels/frame^2
 
 		self.all_arithmetic_blocks_on_road = []
 		self.arithmetic_block = ''
@@ -186,8 +186,8 @@ class Game_Ball:
 
 	def check_game_FPS_changing(self):
 		if self.start_ball_jump_FPS != self.new_ball_jump_FPS:
-			self.set_new_start_game_FPS(self.new_ball_jump_FPS)
 			self.set_new_ball_accelerations_for_jump_in_diff_FPS_for_same_moving()
+			self.set_new_start_game_FPS(self.new_ball_jump_FPS)
 			return True
 		else:
 			return False
@@ -196,13 +196,17 @@ class Game_Ball:
 		self.start_ball_jump_FPS = new_fps
 
 	def set_new_ball_accelerations_for_jump_in_diff_FPS_for_same_moving(self):
-		temp_up_jump_parameters = opt_jump.get_acceleration_v0_steps_for_S_and_FPS_up_jump(self.new_ball_jump_FPS)
-		self.start_ball_jump_speed = temp_up_jump_parameters[0] - 0.5
+		k_fps = (self.start_ball_jump_FPS / self.new_ball_jump_FPS)
+		# temp_up_jump_parameters = opt_jump.get_acceleration_v0_steps_for_S_and_FPS_up_jump(self.new_ball_jump_FPS)
+		# self.start_ball_jump_speed = temp_up_jump_parameters[0]
+		self.start_ball_jump_speed *= k_fps
 		self.ball_jump_speed = self.start_ball_jump_speed
 		print('New ball jump speed(up) =', self.start_ball_jump_speed)
-		self.acceleration_of_ball_speed_to_up = temp_up_jump_parameters[1]
-		temp_down_jump_parameters = opt_jump.get_acceleration_steps_for_S_and_FPS_down_jump(self.new_ball_jump_FPS)
-		self.acceleration_of_ball_speed_to_down = temp_down_jump_parameters[0]
+		# self.acceleration_of_ball_speed_to_up = temp_up_jump_parameters[1]
+		self.acceleration_of_ball_speed_to_up *= k_fps
+		temp_down_jump_parameters = opt_jump.get_new_acceleration_for_new_FPS_down_jump(self.new_ball_jump_FPS)
+		# self.acceleration_of_ball_speed_to_down = temp_down_jump_parameters[0]
+		self.acceleration_of_ball_speed_to_down *= k_fps
 		print('New ball acceleration_of_ball_speed_to_up =', self.acceleration_of_ball_speed_to_up)
 		print('New ball acceleration_of_ball_speed_to_down =', self.acceleration_of_ball_speed_to_down)
 
