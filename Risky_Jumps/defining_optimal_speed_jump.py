@@ -2,12 +2,12 @@
 # for height of jump = 60
 
 def get_acceleration_v0_steps_for_S_and_FPS_up_jump(fps = 40):
-	S = 60
-	fps_t = 1 / fps  # second
-	v0 = 60  # start speed (on bottom) - px/sec
-	test_v0 = 5
+	h = 60
+	k_fps = h / fps
+	v0 = 2.2 * k_fps       # start speed (on bottom) - px/sec
+	test_v0 = 2.2 * k_fps
 	v = 0  # end speed (on top)
-	acceleration = -10 / (fps ** 2) * 10 # as g = 10 [px * (t_1frame)^2]
+	acceleration = -(v0 / fps)   # as a = -(v0 / FPS) [px * (t_1frame)^2]
 	amount_of_iterations = 0
 	S_result = 0
 	# while round(S_result, 1) != S and v0 != 0:
@@ -16,28 +16,32 @@ def get_acceleration_v0_steps_for_S_and_FPS_up_jump(fps = 40):
 		# print(f'Test for v0 = {v0}, acceleration = {acceleration}')
 		for i in range(1, fps + 1):
 			v0 += acceleration * 1
-			S_result += v0 * fps_t
+			S_result += v0 * 1
 			# print('S(passed) =', S_result)
 			# print('v0 =', v0)
 			# print('iteration # =', amount_of_iterations)
 			amount_of_iterations += 1
-			# if round(S_result, 1) >= S and round(v0) <= 0:
-			# 	break
+			if round(S_result, 1) >= h and round(v0) <= 0:
+				break
 
-		if round(v0) <= 0:
+		if round(v0) <= 0 and round(S_result, 1) >= h:
 			return [round(test_v0, 1), round(acceleration, 3), amount_of_iterations, S_result]
 		else:
-			acceleration -= 0.1
-			test_v0 += 0.5
+			test_v0 += 0.005
 			v0 = test_v0
+			acceleration = (v0 / fps)
 			amount_of_iterations = 0
 			S_result = 0
 
 def get_new_acceleration_for_new_FPS_down_jump(fps = 40):
-	# S = 60
+	h = 60
+	if fps >= h:
+		k_fps = fps / h
+	else:
+		k_fps = h / fps
 	# fps_t = 1 / fps  # part of second for 1 frame 
-	# v0 = 0  # start speed (on top) - px/sec
-	acceleration = 10 / (fps ** 2) * 10 # as g = 10 / FPS ^ 2
+	v0 = 0  # start speed (on top) - px/sec
+	acceleration = (10 / fps) * k_fps    # as g = 10 / FPS
 	return [acceleration, 0, 0]
 	# amount_of_iterations = 0
 	# S_result = 0
@@ -79,5 +83,5 @@ def testing_for_different_FPS_down_jump(first_FPS = 30, last_FPS = 100):
 		print('-' * 40)
 
 if __name__ == '__main__':
-	testing_for_different_FPS_up_jump(30, 100)
+	testing_for_different_FPS_up_jump(30, 300)
 	# testing_for_different_FPS_down_jump(30, 300)

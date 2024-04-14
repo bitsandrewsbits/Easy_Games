@@ -50,7 +50,7 @@ class Game_Ball:
 			self.ball_move_distance += self.ball_jump_speed
 			self.ball_jump_speed += self.acceleration_of_ball_speed_to_up
 			
-		if round(self.ball_jump_speed) == 0.0 or self.ball_move_distance >= self.ball_jump_high:
+		if round(self.ball_jump_speed) == 0.0:
 			# print('Max height in jump =', self.ball_center_coordinates)
 			# print('Ball move distance =', self.ball_move_distance)
 			self.ball_jump_to_up = False
@@ -115,8 +115,9 @@ class Game_Ball:
 			print('Road height =', self.height_of_road)
 			print('Ball status =', self.ball_status)
 
-		if self.ball_move_distance + self.ball_jump_speed >= self.ball_jump_total_distance or \
-		self.height_of_road <= self.ball_center_coordinates[1] + self.ball_radius:
+		# if self.ball_move_distance + self.ball_jump_speed >= self.ball_jump_total_distance or \
+		# self.height_of_road <= self.ball_center_coordinates[1] + self.ball_radius:
+		if self.ball_center_coordinates[1] + self.ball_radius >= self.height_of_road:
 			print(f"{self.ball_move_distance + self.ball_jump_speed} >= {self.ball_jump_total_distance} or {self.height_of_road} <= {self.ball_center_coordinates[1] + self.ball_radius}")
 			print('Ball center coordinates after jump:', self.ball_center_coordinates)
 			if not self.arithmetic_block_behind_ball(self.arithmetic_block):
@@ -196,17 +197,17 @@ class Game_Ball:
 		self.start_ball_jump_FPS = new_fps
 
 	def set_new_ball_accelerations_for_jump_in_diff_FPS_for_same_moving(self):
-		k_fps = (self.start_ball_jump_FPS / self.new_ball_jump_FPS)
-		# temp_up_jump_parameters = opt_jump.get_acceleration_v0_steps_for_S_and_FPS_up_jump(self.new_ball_jump_FPS)
-		# self.start_ball_jump_speed = temp_up_jump_parameters[0]
-		self.start_ball_jump_speed *= k_fps
+		# k_fps = (self.start_ball_jump_FPS / self.new_ball_jump_FPS)
+		temp_up_jump_parameters = opt_jump.get_acceleration_v0_steps_for_S_and_FPS_up_jump(self.new_ball_jump_FPS)
+		self.start_ball_jump_speed = temp_up_jump_parameters[0]
+		# self.start_ball_jump_speed *= k_fps
 		self.ball_jump_speed = self.start_ball_jump_speed
 		print('New ball jump speed(up) =', self.start_ball_jump_speed)
-		# self.acceleration_of_ball_speed_to_up = temp_up_jump_parameters[1]
-		self.acceleration_of_ball_speed_to_up *= k_fps
+		self.acceleration_of_ball_speed_to_up = temp_up_jump_parameters[1]
+		# self.acceleration_of_ball_speed_to_up *= k_fps
 		temp_down_jump_parameters = opt_jump.get_new_acceleration_for_new_FPS_down_jump(self.new_ball_jump_FPS)
-		# self.acceleration_of_ball_speed_to_down = temp_down_jump_parameters[0]
-		self.acceleration_of_ball_speed_to_down *= k_fps
+		self.acceleration_of_ball_speed_to_down = temp_down_jump_parameters[0]
+		# self.acceleration_of_ball_speed_to_down *= k_fps
 		print('New ball acceleration_of_ball_speed_to_up =', self.acceleration_of_ball_speed_to_up)
 		print('New ball acceleration_of_ball_speed_to_down =', self.acceleration_of_ball_speed_to_down)
 

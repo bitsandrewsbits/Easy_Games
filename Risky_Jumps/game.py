@@ -291,8 +291,8 @@ class Jump_Game:
 			print('Adding new hole...')
 			self.holes_amount += 1
 			print('Amount of holes =', self.holes_amount)
-		if self.road_distance % 100 == 0 and self.road_distance != 0:
-			self.iterations_per_second += 1
+		if self.road_distance % 200 == 0 and self.road_distance != 0:
+			self.iterations_per_second += 2
 
 	def manage_road_coordinates(self):
 		if self.road_distance == 0:
