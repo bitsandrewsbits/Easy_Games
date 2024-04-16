@@ -47,7 +47,6 @@ class Arithmetic_Obstacle_Block:
 
 		return [randomly_choosed_X_coordinate_for_block, Y_coordinate_for_block]
 
-
 	def draw_block_on_game_road(self):
 		pg.draw.rect(self.pygame_window_obj, self.block_color_in_RGB, self.block_parameters_for_drawing)
 

@@ -226,7 +226,7 @@ class Game_Ball:
 		self.ball_center_coordinates[1] = self.ball_start_center_coordinates[1]
 
 	def ball_changing_coordinates_when_falling_from_road(self):
-		if self.ball_center_coordinates[1] - 100 > self.ball_start_center_coordinates[1]:
+		if self.ball_center_coordinates[1] > self.ball_start_center_coordinates[1] + 100:
 			self.ball_status = 'game_over'
 		else:
 			self.ball_center_coordinates[1] += self.ball_jump_speed
@@ -302,9 +302,6 @@ class Game_Ball:
 
 		arithmetic_block_parameters = arithmetic_block_obj.get_block_parameters()
 		aritmetic_block_width = arithmetic_block_parameters[2]
-		# if self.ball_jump_to_down:
-		# 	print('Condition(is ball over block surface):')
-		# 	print(f"if {self.ball_center_coordinates[0]} >= {arithmetic_block_parameters[0]} and {self.ball_center_coordinates[0]} <= {arithmetic_block_parameters[0]} + {aritmetic_block_width}")
 		
 		if self.ball_center_coordinates[0] >= arithmetic_block_parameters[0] and \
 		(self.ball_center_coordinates[0] <= arithmetic_block_parameters[0] + aritmetic_block_width):
@@ -312,8 +309,22 @@ class Game_Ball:
 		else:
 			return False
 
+	def ball_need_to_fall_from_arithmetic_block(self, arithmetic_block_obj):
+		if arithmetic_block_obj != '':
+			arithmetic_block_parameters = arithmetic_block_obj.get_block_parameters()
+			aritmetic_block_width = arithmetic_block_parameters[2]
+			if self.ball_center_coordinates[0] >= arithmetic_block_parameters[0] + aritmetic_block_width:
+				return True
 
-
+	def change_ball_coordinates_when_falling_from_block(self):
+		if self.ball_center_coordinates[1] + self.ball_radius >= self.height_of_road:
+			self.ball_status = 'ball_on_road_level'
+			self.set_initial_ball_parameters_for_jump()
+		else:
+			self.ball_center_coordinates[1] += self.ball_jump_speed
+			self.ball_move_distance += self.ball_jump_speed
+			self.ball_jump_speed += self.acceleration_of_ball_speed_to_down
+			self.ball_status = 'ball_falling_from_block'
 
 
 

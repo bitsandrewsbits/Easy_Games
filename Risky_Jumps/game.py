@@ -31,6 +31,7 @@ class Jump_Game:
 		self.road_ball = ball.Game_Ball(self.game_main_window, self.road_height)
 		self.ball_in_jump = False
 		self.ball_falling_cause_game_over = False
+		self.check_for_fall_from_block_to_road = True
 		self.amount_of_jumps = 0
 		self.iterations_per_second = 40
 		self.start_menu = menu.Game_Menu(self.game_main_window, self.display_size, "Start", 
@@ -99,6 +100,7 @@ class Jump_Game:
 		self.road_ball = ball.Game_Ball(self.game_main_window, self.road_height)
 		self.ball_in_jump = False
 		self.ball_falling_cause_game_over = False
+		self.check_for_fall_from_block_to_road = True
 		self.iterations_per_second = 40
 		self.amount_of_jumps = 0
 		self.arithmetic_blocks_and_status_for_ball = []
@@ -107,19 +109,32 @@ class Jump_Game:
 		self.game_main_window.fill(self.display_rgb_color)
 
 		self.check_on_ball_jump()
-
-		if self.check_ball_coordinates_when_need_to_fall() == 'ball_falling_cause_game_over':
-			self.ball_falling_cause_game_over = True
-		if self.ball_falling_cause_game_over:
-			self.ball_falling_when_game_over()
+		self.check_ball_coordinates_when_need_to_fall_from_road_into_hole()
+		
+		if self.check_for_fall_from_block_to_road:
+			self.check_ball_coordinates_when_need_to_fall_from_arithmetic_block_to_road()
 
 		self.show_road_passed_distance()
 		self.game_roadline()
 		self.arithmetic_blocks_obstacle_on_road()
 
+	def check_ball_coordinates_when_need_to_fall_from_road_into_hole(self):
+		if self.check_ball_coordinates_when_need_to_fall() == 'ball_falling_cause_game_over':
+			self.ball_falling_cause_game_over = True
+		if self.ball_falling_cause_game_over:
+			self.ball_falling_when_game_over()
+
+	def check_ball_coordinates_when_need_to_fall_from_arithmetic_block_to_road(self):
+		if self.road_ball.ball_need_to_fall_from_arithmetic_block(self.road_ball.arithmetic_block):
+			self.road_ball.change_ball_coordinates_when_falling_from_block()
+		if self.road_ball.get_ball_status() == 'ball_on_road_level':
+			self.road_ball.ball_start_center_coordinates[1] = self.road_height - self.road_ball.ball_radius - 3
+			self.road_ball.ball_center_coordinates[1] = self.road_height - self.road_ball.ball_radius - 3
+			self.check_for_fall_from_block_to_road = False
+
 	def set_new_ball_XY_coordinates_when_collision_with_arithmetic_block(self):
 		if self.arithmetic_blocks_and_status_for_ball != []:
-			self.road_ball.check_ball_collision_with_arithmetic_block_and_set_new_ball_XY(self.get_first_arithmetic_block())
+			self.road_ball.check_ball_collision_with_arithmetic_block_and_set_new_ball_XY(self.road_ball.arithmetic_block)
 
 	def check_on_ball_jump(self):
 		self.road_ball.set_new_game_FPS(self.iterations_per_second)
@@ -147,6 +162,7 @@ class Jump_Game:
 
 				if self.road_ball.get_ball_jump_status() == 'Ball_jumped_on_block':
 					self.ball_in_jump = False
+					self.check_for_fall_from_block_to_road = True
 					self.road_ball.set_new_current_ball_Y_coordinate_when_collision_with_arithmetic_block()
 					self.amount_of_jumps += 1
 
@@ -159,8 +175,8 @@ class Jump_Game:
 				if current_ball_X_coordinate > self.roadlines_coordinates[i][0] and \
 				    current_ball_X_coordinate < self.roadlines_coordinates[i + 1][0]:
 				    if current_ball_Y_coordinate > self.road_height or \
-				    self.road_ball.get_ball_status() in ('move_on_road', 'ball_jumped'):
-				    	if not self.road_ball.ball_over_arithmetic_block_surface(self.get_first_arithmetic_block()):
+				    self.road_ball.get_ball_status() in ('move_on_road', 'ball_jumped', 'ball_on_road_level'):
+				    	if not self.road_ball.ball_over_arithmetic_block_surface(self.road_ball.arithmetic_block):
 				    		print('Ball is falling...Game Over')
 				    		return 'ball_falling_cause_game_over'
 
