@@ -135,6 +135,7 @@ class Game_Ball:
 			print('Ball start Y coordinate for jump =', self.ball_start_center_coordinates[1])
 			print('Road height =', self.height_of_road)
 			print('===Ball Jumped!===')
+			print('Ball status =', self.ball_status)
 			return 'Ball_jumped'
 		else:
 			self.ball_status = 'ball_in_jump'
@@ -326,8 +327,12 @@ class Game_Ball:
 			self.ball_jump_speed += self.acceleration_of_ball_speed_to_down
 			self.ball_status = 'ball_falling_from_block'
 
-
-
+	def ball_in_one_of_jump_statuses_and_beyond_block(self):
+		if self.arithmetic_block_behind_ball(self.arithmetic_block) and \
+		self.ball_status in ('ball_in_jump', 'ball_in_jump_over_block'):
+			return True
+		else:
+			return False
 
 
 
