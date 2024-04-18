@@ -16,7 +16,7 @@ class Jump_Game:
 		self.display_rgb_color = (0, 0, 0)
 		self.road_distance = 0
 		self.holes_amount = 1
-		self.hole_size = 25
+		self.hole_size = 45
 		self.road_holes_coordinates = []
 		self.max_amount_of_hole_with_display_parameters = self.display_size[0] // (self.hole_size * 2)
 		self.road_move_speed = 1
@@ -61,7 +61,6 @@ class Jump_Game:
 				if game_event.type == pygame.KEYDOWN:
 					if game_event.key == pygame.K_UP and self.check_ball_coordinates_when_need_to_fall() != 'ball_falling_cause_game_over':
 						self.ball_in_jump = True
-						# self.road_ball.get_arithmetic_block_object(self.arithmetic_blocks_and_status_for_ball)
 						# self.ball_start_jumping_sound()
 					if game_event.key == pygame.K_ESCAPE:
 						menu_button_name_and_status = self.exit_menu.menu_displaying()
@@ -174,15 +173,17 @@ class Jump_Game:
 					self.amount_of_jumps += 1
 
 	def check_ball_coordinates_when_need_to_fall(self):
-		current_ball_X_coordinate = self.road_ball.get_ball_center_coordinates()[0]
-		current_ball_Y_coordinate = self.road_ball.get_ball_center_coordinates()[1]
+		ball_XY_coordinates = self.road_ball.get_ball_center_coordinates()
+		current_ball_X_coordinate = ball_XY_coordinates[0]
+		current_ball_Y_coordinate = ball_XY_coordinates[1]
 
 		if len(self.roadlines_coordinates) > 0:
 			for i in range(1, len(self.roadlines_coordinates), 2):
 				if current_ball_X_coordinate > self.roadlines_coordinates[i][0] and \
 				    current_ball_X_coordinate < self.roadlines_coordinates[i + 1][0]:
-				    if self.road_ball.get_ball_status() in ('move_on_road', 'ball_jumped', 'ball_on_road_level'):
-				    	# if not self.road_ball.ball_over_arithmetic_block_surface(self.road_ball.arithmetic_block):
+				    print('Ball in hole area!!!')
+				    print('Ball status:', self.road_ball.get_ball_status())
+				    if self.road_ball.get_ball_status() in ('move_on_road', 'ball_jumped'):
 				    	print('Ball is falling...Game Over')
 				    	return 'ball_falling_cause_game_over'
 
