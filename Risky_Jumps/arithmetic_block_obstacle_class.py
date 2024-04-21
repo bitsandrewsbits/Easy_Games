@@ -28,11 +28,12 @@ class Arithmetic_Obstacle_Block:
 
 	def define_road_XY_coordinates_for_block_on_road(self):
 		for road_XY_pair in self.roadline_XY_pairs_of_coordinates:
-			if road_XY_pair[0] > self.main_game_window_width_height[0] + 130:
+			if road_XY_pair[0] >= self.main_game_window_width_height[0]:
 				self.road_XY_pairs_of_coordinates_for_block.append(road_XY_pair)
 
 	def get_random_two_XY_pairs_of_line_as_part_of_road(self):
 		self.define_road_XY_coordinates_for_block_on_road()
+		print('Length of XY pair coordinates:', len(self.road_XY_pairs_of_coordinates_for_block))
 		first_random_XY_pair_index_in_coordinates = randint(0, len(self.road_XY_pairs_of_coordinates_for_block) - 2)
 		secound_XY_pair_index_in_coordinates = first_random_XY_pair_index_in_coordinates + 1
 		return [self.road_XY_pairs_of_coordinates_for_block[first_random_XY_pair_index_in_coordinates],
