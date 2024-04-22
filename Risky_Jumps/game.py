@@ -145,11 +145,11 @@ class Jump_Game:
 		self.road_ball.get_arithmetic_block_that_closest_to_ball()
 		
 		if self.arithmetic_blocks_and_status_for_ball != []:
-			if self.road_ball.ball_in_one_of_jump_statuses_and_beyond_block():
+			if self.road_ball.ball_in_one_of_jump_statuses_and_beyond_block() and self.ball_in_jump:
 				print('Ball jump status:', self.road_ball.get_ball_status())
 				self.check_for_fall_from_block_to_road = False
 			else:
-				self.check_for_fall_from_block_to_road = True		
+				self.check_for_fall_from_block_to_road = True
 
 		if not self.ball_in_jump:
 			self.set_new_ball_XY_coordinates_when_collision_with_arithmetic_block()
@@ -162,7 +162,7 @@ class Jump_Game:
 				if self.road_ball.get_ball_jump_status() == 'Ball_jumped':
 					print('WARNING! Ball jumped!')
 					self.ball_in_jump = False
-					self.road_ball.set_new_current_ball_Y_center_coordinate_when_road_height_changed()
+					# self.road_ball.set_new_current_ball_Y_center_coordinate_when_road_height_changed()
 					self.amount_of_jumps += 1
 
 			elif self.road_ball.get_ball_jump_status() == 'Ball_in_jump_over_block':
@@ -172,9 +172,10 @@ class Jump_Game:
 				if self.road_ball.get_ball_jump_status() == 'Ball_jumped_on_block':
 					print('WARNING! Ball jumped on block!')
 					self.ball_in_jump = False
-					self.road_ball.set_new_current_ball_Y_coordinate_when_collision_with_arithmetic_block()
+					# self.road_ball.set_new_current_ball_Y_coordinate_when_collision_with_block_surface()
 					self.amount_of_jumps += 1
 			elif self.road_ball.get_ball_status() == 'Ball_jumped_from_block_to_road':
+				print('WARNING! Ball jumped FROM block TO road!')
 				self.ball_in_jump = False
 				self.amount_of_jumps += 1
 
@@ -191,7 +192,7 @@ class Jump_Game:
 				    print('Ball in hole area!!!')
 				    print('Ball status:', self.road_ball.get_ball_status())
 				    if self.road_ball.get_ball_status() in ('move_on_road') or \
-				    (self.road_ball.get_ball_status() in ('ball_in_jump') and \
+				    (self.road_ball.get_ball_status() in ('ball_in_jump', 'ball_in_jump_from_block_to_road') and \
 				    current_ball_Y_coordinate + self.road_ball.ball_radius >= self.road_height):
 				    	print('Ball is falling...Game Over')
 				    	return 'ball_falling_cause_game_over'
@@ -323,8 +324,10 @@ class Jump_Game:
 			print('Adding new hole...')
 			self.holes_amount += 1
 			print('Amount of holes =', self.holes_amount)
-		if self.road_distance % 200 == 0 and self.road_distance != 0:
-			self.iterations_per_second += 2
+		if self.road_ball.get_ball_status() in ('move_on_road', 'ball_jumped', 'ball_on_block', 
+		'ball_jumped_from_block_to_road'):
+			if self.road_distance % 200 == 0 and self.road_distance != 0:
+				self.iterations_per_second += 2
 
 	def manage_road_coordinates(self):
 		if self.road_distance == 0:
