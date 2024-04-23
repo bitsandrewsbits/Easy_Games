@@ -151,31 +151,34 @@ class Jump_Game:
 			else:
 				self.check_for_fall_from_block_to_road = True
 
+		self.set_new_ball_XY_coordinates_when_collision_with_arithmetic_block()
 		if not self.ball_in_jump:
-			self.set_new_ball_XY_coordinates_when_collision_with_arithmetic_block()
 			self.road_ball.draw_ball()
 		elif self.ball_in_jump:
-			if self.road_ball.get_ball_jump_status() == 'Ball_in_jump':
-				self.check_is_road_height_changed()
-				self.road_ball.ball_jump()
-				
-				if self.road_ball.get_ball_jump_status() == 'Ball_jumped':
-					print('WARNING! Ball jumped!')
-					self.ball_in_jump = False
-					# self.road_ball.set_new_current_ball_Y_center_coordinate_when_road_height_changed()
-					self.amount_of_jumps += 1
+			# self.set_new_ball_XY_coordinates_when_collision_with_arithmetic_block()
+			self.check_is_road_height_changed()
+			self.road_ball.ball_jump()
+			
+			# if self.road_ball.get_ball_jump_status() == 'Ball_in_jump':
+			current_ball_status = self.road_ball.get_ball_jump_status()
+			
+			if current_ball_status == 'Ball_jumped':
+				print('WARNING! Ball jumped!')
+				self.ball_in_jump = False
+				self.amount_of_jumps += 1
 
-			elif self.road_ball.get_ball_jump_status() == 'Ball_in_jump_over_block':
-				self.check_is_road_height_changed()
-				self.road_ball.ball_jump()
+			# elif self.road_ball.get_ball_jump_status() == 'Ball_in_jump_over_block':
+			# 	self.road_ball.ball_jump()
 
-				if self.road_ball.get_ball_jump_status() == 'Ball_jumped_on_block':
-					print('WARNING! Ball jumped on block!')
-					self.ball_in_jump = False
-					# self.road_ball.set_new_current_ball_Y_coordinate_when_collision_with_block_surface()
-					self.amount_of_jumps += 1
-			elif self.road_ball.get_ball_status() == 'Ball_jumped_from_block_to_road':
-				print('WARNING! Ball jumped FROM block TO road!')
+			if current_ball_status == 'Ball_jumped_on_block':
+				print('WARNING! Ball jumped on block!')
+				self.ball_in_jump = False
+				self.amount_of_jumps += 1
+
+			# elif self.road_ball.get_ball_status() == 'Ball_in_jump_from_block_to_road':
+			# 	self.road_ball.ball_jump()
+			if current_ball_status == 'Ball_jumped_from_block_to_road':
+				print('WARNING! Ball jumped FROM block TO ROAD!')
 				self.ball_in_jump = False
 				self.amount_of_jumps += 1
 
