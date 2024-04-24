@@ -155,32 +155,35 @@ class Jump_Game:
 		if not self.ball_in_jump:
 			self.road_ball.draw_ball()
 		elif self.ball_in_jump:
-			# self.set_new_ball_XY_coordinates_when_collision_with_arithmetic_block()
 			self.check_is_road_height_changed()
 			self.road_ball.ball_jump()
+			self.road_ball.set_ball_jump_status()
 			
-			# if self.road_ball.get_ball_jump_status() == 'Ball_in_jump':
-			current_ball_status = self.road_ball.get_ball_jump_status()
+			current_ball_status = self.road_ball.get_ball_status()
+			print('Ball jump status:', current_ball_status)
+
 			
-			if current_ball_status == 'Ball_jumped':
+			# if current_ball_status in ('Ball_jumped', 'Ball_jumped_on_block', 'Ball_jumped_from_block_to_road'):
+			if current_ball_status in ('ball_jumped_from_road_to_road', 'ball_jumped_to_block', 'ball_jumped_from_block_to_road'):
 				print('WARNING! Ball jumped!')
+				print('Current ball status:', current_ball_status)
 				self.ball_in_jump = False
 				self.amount_of_jumps += 1
 
 			# elif self.road_ball.get_ball_jump_status() == 'Ball_in_jump_over_block':
 			# 	self.road_ball.ball_jump()
 
-			if current_ball_status == 'Ball_jumped_on_block':
-				print('WARNING! Ball jumped on block!')
-				self.ball_in_jump = False
-				self.amount_of_jumps += 1
+			# if current_ball_status == 'Ball_jumped_on_block':
+			# 	print('WARNING! Ball jumped on block!')
+			# 	self.ball_in_jump = False
+			# 	self.amount_of_jumps += 1
 
 			# elif self.road_ball.get_ball_status() == 'Ball_in_jump_from_block_to_road':
 			# 	self.road_ball.ball_jump()
-			if current_ball_status == 'Ball_jumped_from_block_to_road':
-				print('WARNING! Ball jumped FROM block TO ROAD!')
-				self.ball_in_jump = False
-				self.amount_of_jumps += 1
+			# if current_ball_status == 'Ball_jumped_from_block_to_road':
+			# 	print('WARNING! Ball jumped FROM block TO ROAD!')
+			# 	self.ball_in_jump = False
+			# 	self.amount_of_jumps += 1
 
 
 	def check_ball_coordinates_when_need_to_fall(self):
