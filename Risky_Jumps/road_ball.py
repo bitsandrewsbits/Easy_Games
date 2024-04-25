@@ -61,13 +61,13 @@ class Game_Ball:
 	def ball_move_left(self):
 		self.ball_center_coordinates[0] -= 1
 
-	def set_ball_jump_status(self):
+	def set_ball_jump_status_in_different_cases(self):
 		if self.arithmetic_block != '':
-				self.set_ball_status_when_jump_from_road_to_road()
+			self.set_ball_status_when_jump_from_road_to_road()
+		
+			self.set_ball_status_when_jump_from_road_to_block()
 			
-				self.set_ball_status_when_jump_from_road_to_block()
-			
-				self.set_ball_status_when_jump_from_block_to_road()				
+			self.set_ball_status_when_jump_from_block_to_road()				
 	
 	def set_ball_status_when_jump_from_road_to_block(self):
 		if self.ball_over_arithmetic_block_surface(self.arithmetic_block) and self.ball_jump_to_down and \
@@ -190,17 +190,13 @@ class Game_Ball:
 		self.start_ball_jump_FPS = new_fps
 
 	def set_new_ball_accelerations_for_jump_in_diff_FPS_for_same_moving(self):
-		# k_fps = (self.start_ball_jump_FPS / self.new_ball_jump_FPS)
 		temp_up_jump_parameters = opt_jump.get_acceleration_v0_steps_for_S_and_FPS_up_jump(self.new_ball_jump_FPS)
 		self.start_ball_jump_speed = temp_up_jump_parameters[0]
-		# self.start_ball_jump_speed *= k_fps
 		self.ball_jump_speed = self.start_ball_jump_speed
 		print('New ball jump speed(up) =', self.start_ball_jump_speed)
 		self.acceleration_of_ball_speed_to_up = temp_up_jump_parameters[1]
-		# self.acceleration_of_ball_speed_to_up *= k_fps
 		temp_down_jump_parameters = opt_jump.get_new_acceleration_for_new_FPS_down_jump(self.new_ball_jump_FPS)
 		self.acceleration_of_ball_speed_to_down = temp_down_jump_parameters[0]
-		# self.acceleration_of_ball_speed_to_down *= k_fps
 		print('New ball acceleration_of_ball_speed_to_up =', self.acceleration_of_ball_speed_to_up)
 		print('New ball acceleration_of_ball_speed_to_down =', self.acceleration_of_ball_speed_to_down)
 
@@ -219,7 +215,7 @@ class Game_Ball:
 		self.ball_center_coordinates[1] = self.ball_start_center_coordinates[1]
 
 	def ball_changing_coordinates_when_falling_from_road(self):
-		if self.ball_center_coordinates[1] >= self.ball_start_center_coordinates[1] + 50:
+		if self.ball_center_coordinates[1] >= self.height_of_road + 50:
 			self.ball_status = 'game_over'
 		else:
 			self.ball_center_coordinates[1] += self.ball_jump_speed

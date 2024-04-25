@@ -59,7 +59,7 @@ class Jump_Game:
 					self.exit_from_game = True
 				
 				if game_event.type == pygame.KEYDOWN:
-					if game_event.key == pygame.K_UP and self.check_ball_coordinates_when_need_to_fall() != 'ball_falling_cause_game_over':
+					if game_event.key == pygame.K_UP and self.road_ball.get_ball_status() != 'game_over':
 						self.ball_in_jump = True
 						# self.ball_start_jumping_sound()
 					if game_event.key == pygame.K_ESCAPE:
@@ -119,9 +119,14 @@ class Jump_Game:
 		self.arithmetic_blocks_obstacle_on_road()
 
 	def check_ball_coordinates_when_need_to_fall_from_road_into_hole(self):
-		if self.check_ball_coordinates_when_need_to_fall() == 'ball_falling_cause_game_over':
-			self.ball_falling_cause_game_over = True
-		if self.ball_falling_cause_game_over:
+		if not self.ball_falling_cause_game_over:
+			
+			if self.road_ball.get_ball_status() == 'ball_falling_into_hole':
+				self.ball_falling_cause_game_over = True
+			else:
+				self.set_ball_game_over_status_need_to_fall_into_hole()
+		
+		else:
 			self.ball_falling_when_game_over()
 
 	def check_ball_coordinates_when_need_to_fall_from_arithmetic_block_to_road(self):
@@ -157,12 +162,11 @@ class Jump_Game:
 		elif self.ball_in_jump:
 			self.check_is_road_height_changed()
 			self.road_ball.ball_jump()
-			self.road_ball.set_ball_jump_status()
+			self.road_ball.set_ball_jump_status_in_different_cases()
 			
 			current_ball_status = self.road_ball.get_ball_status()
 			print('Ball jump status:', current_ball_status)
 
-			
 			# if current_ball_status in ('Ball_jumped', 'Ball_jumped_on_block', 'Ball_jumped_from_block_to_road'):
 			if current_ball_status in ('ball_jumped_from_road_to_road', 'ball_jumped_to_block', 'ball_jumped_from_block_to_road'):
 				print('WARNING! Ball jumped!')
@@ -170,23 +174,7 @@ class Jump_Game:
 				self.ball_in_jump = False
 				self.amount_of_jumps += 1
 
-			# elif self.road_ball.get_ball_jump_status() == 'Ball_in_jump_over_block':
-			# 	self.road_ball.ball_jump()
-
-			# if current_ball_status == 'Ball_jumped_on_block':
-			# 	print('WARNING! Ball jumped on block!')
-			# 	self.ball_in_jump = False
-			# 	self.amount_of_jumps += 1
-
-			# elif self.road_ball.get_ball_status() == 'Ball_in_jump_from_block_to_road':
-			# 	self.road_ball.ball_jump()
-			# if current_ball_status == 'Ball_jumped_from_block_to_road':
-			# 	print('WARNING! Ball jumped FROM block TO ROAD!')
-			# 	self.ball_in_jump = False
-			# 	self.amount_of_jumps += 1
-
-
-	def check_ball_coordinates_when_need_to_fall(self):
+	def set_ball_game_over_status_need_to_fall_into_hole(self):
 		ball_XY_coordinates = self.road_ball.get_ball_center_coordinates()
 		current_ball_X_coordinate = ball_XY_coordinates[0]
 		current_ball_Y_coordinate = ball_XY_coordinates[1]
@@ -198,10 +186,9 @@ class Jump_Game:
 				    print('Ball in hole area!!!')
 				    print('Ball status:', self.road_ball.get_ball_status())
 				    if self.road_ball.get_ball_status() in ('move_on_road') or \
-				    (self.road_ball.get_ball_status() in ('ball_in_jump', 'ball_in_jump_from_block_to_road') and \
-				    current_ball_Y_coordinate + self.road_ball.ball_radius >= self.road_height):
+				    (self.road_ball.get_ball_status() in ('ball_jumped_from_road_to_road', 'ball_in_jump_from_block_to_road')):
 				    	print('Ball is falling...Game Over')
-				    	return 'ball_falling_cause_game_over'
+				    	self.road_ball.ball_status = 'ball_falling_into_hole'
 
 	def ball_falling_when_game_over(self):
 		if self.road_ball.get_ball_status() != 'game_over':
