@@ -133,8 +133,8 @@ class Jump_Game:
 		if self.road_ball.ball_need_to_fall_from_arithmetic_block(self.road_ball.arithmetic_block):
 			self.road_ball.change_ball_coordinates_when_falling_from_block()
 		if self.road_ball.get_ball_status() == 'ball_on_road_level':
-			self.road_ball.ball_start_center_coordinates[1] = self.road_height - self.road_ball.ball_radius - 3
-			self.road_ball.ball_center_coordinates[1] = self.road_height - self.road_ball.ball_radius - 3
+			self.road_ball.ball_start_center_coordinates[1] = self.road_height - self.road_ball.ball_radius - 5
+			self.road_ball.ball_center_coordinates[1] = self.road_height - self.road_ball.ball_radius - 5
 			self.check_for_fall_from_block_to_road = False
 
 	def set_new_ball_XY_coordinates_when_collision_with_arithmetic_block(self):
