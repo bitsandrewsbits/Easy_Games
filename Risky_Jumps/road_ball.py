@@ -34,6 +34,7 @@ class Game_Ball:
 
 		self.all_arithmetic_blocks_on_road = []
 		self.arithmetic_block = ''
+		self.ball_jump_status_func_executions = [False, False, False]
 
 	def draw_ball(self):
 		pg.draw.circle(self.screen_surface, self.ball_color, self.ball_center_coordinates, self.ball_radius)
@@ -63,8 +64,9 @@ class Game_Ball:
 
 	def set_ball_jump_status_in_different_cases(self):
 		if self.arithmetic_block != '':
+
 			self.set_ball_status_when_jump_from_road_to_road()
-		
+			
 			self.set_ball_status_when_jump_from_road_to_block()
 			
 			self.set_ball_status_when_jump_from_block_to_road()				
@@ -105,7 +107,8 @@ class Game_Ball:
 				print('Road height =', self.height_of_road)
 
 	def set_ball_status_when_jump_from_road_to_road(self):
-		if self.ball_status not in ('ball_in_jump_to[over]_block', 'ball_in_jump_from_block_to_road'):
+		if self.ball_status not in ('ball_in_jump_to[over]_block', 'ball_in_jump_from_block_to_road',
+			'ball_jumped_from_block_to_road'):
 			if self.ball_center_coordinates[1] + self.ball_radius >= self.height_of_road:
 				print(f"{self.ball_move_distance + self.ball_jump_speed} >= {self.ball_jump_total_distance} or {self.height_of_road} <= {self.ball_center_coordinates[1] + self.ball_radius}")
 				print('Ball center coordinates after jump:', self.ball_center_coordinates)
@@ -122,6 +125,17 @@ class Game_Ball:
 			else:
 				self.ball_status = 'ball_in_jump_from_road_to_road'
 
+	# def set_ball_jump_status_func_executions(self):
+	# 	self.set_ball_jump_status_func_executions = [False, False, False]
+	# 	if self.ball_status == 'ball_in_jump_from_road_to_road':
+	# 		self.set_ball_status_func_executions[0] = True
+	# 	elif self.ball_status == 'ball_in_jump_to[over]_block':
+	# 		self.set_ball_status_func_executions[1] = True
+	# 	elif self.ball_status == 'ball_in_jump_from_block_to_road':
+	# 		self.set_ball_status_func_executions[2] = True
+
+	# def get_ball_jump_status_func_executions(self):
+	# 	return self.set_ball_status_func_executions
 
 	def ball_on_the_block_surface(self, arithm_block):
 		arithm_block_parameters = arithm_block.get_block_parameters()
