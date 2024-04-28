@@ -187,8 +187,9 @@ class Jump_Game:
 				    print('Ball status:', self.road_ball.get_ball_status())
 				    if self.road_ball.get_ball_status() in ('move_on_road') or \
 				    (self.road_ball.get_ball_status() in ('ball_jumped_from_road_to_road', 'ball_in_jump_from_block_to_road')):
-				    	print('Ball is falling...Game Over')
-				    	self.road_ball.ball_status = 'ball_falling_into_hole'
+				    	if self.road_ball.ball_jump_to_down:
+				    		print('Ball is falling...Game Over')
+				    		self.road_ball.ball_status = 'ball_falling_into_hole'
 
 	def ball_falling_when_game_over(self):
 		if self.road_ball.get_ball_status() != 'game_over':
@@ -317,7 +318,7 @@ class Jump_Game:
 			print('Adding new hole...')
 			self.holes_amount += 1
 			print('Amount of holes =', self.holes_amount)
-		if self.road_ball.get_ball_status() in ('move_on_road', 'ball_jumped', 'ball_on_block', 
+		if self.road_ball.get_ball_status() in ('move_on_road', 'ball_jumped_from_road_to_road', 'ball_on_block', 
 		'ball_jumped_from_block_to_road'):
 			if self.road_distance % 200 == 0 and self.road_distance != 0:
 				self.iterations_per_second += 2
