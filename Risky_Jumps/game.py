@@ -185,11 +185,12 @@ class Jump_Game:
 				    current_ball_X_coordinate < self.roadlines_coordinates[i + 1][0]:
 				    print('Ball in hole area!!!')
 				    print('Ball status:', self.road_ball.get_ball_status())
-				    if self.road_ball.get_ball_status() in ('move_on_road') or \
-				    (self.road_ball.get_ball_status() in ('ball_jumped_from_road_to_road', 'ball_in_jump_from_block_to_road')):
-				    	if self.road_ball.ball_jump_to_down:
-				    		print('Ball is falling...Game Over')
-				    		self.road_ball.ball_status = 'ball_falling_into_hole'
+				    if self.road_ball.get_ball_status() in ('move_on_road', 'ball_jumped_from_road_to_road', 
+				    'ball_jumped_from_block_to_road', 'ball_on_road_level') or \
+				    (self.road_ball.get_ball_status() in ('ball_in_jump_from_road_to_road', 
+				    'ball_in_jump_from_block_to_road') and self.road_ball.ball_jump_to_down):
+				    	print('Ball is falling...Game Over')
+				    	self.road_ball.ball_status = 'ball_falling_into_hole'
 
 	def ball_falling_when_game_over(self):
 		if self.road_ball.get_ball_status() != 'game_over':
