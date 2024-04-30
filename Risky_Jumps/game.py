@@ -269,6 +269,7 @@ class Jump_Game:
 		return result_lines_coordinates
 
 	def generate_random_hole_start_coordinates(self, start_road_coordinates, end_road_coordinates):
+		end_road_coordinates = end_road_coordinates - 2 * self.hole_size
 		self.road_holes_coordinates = []
 		for i in range(self.holes_amount):
 			find_right_hole_coordinate = False
