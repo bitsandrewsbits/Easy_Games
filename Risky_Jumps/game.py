@@ -111,8 +111,7 @@ class Jump_Game:
 		self.check_on_ball_jump()
 		self.check_ball_coordinates_when_need_to_fall_from_road_into_hole()
 		
-		if self.check_for_fall_from_block_to_road:
-			self.check_ball_coordinates_when_need_to_fall_from_arithmetic_block_to_road()
+		self.check_ball_fell_from_block_to_road()
 
 		self.show_road_passed_distance()
 		self.game_roadline()
@@ -129,13 +128,10 @@ class Jump_Game:
 		else:
 			self.ball_falling_when_game_over()
 
-	def check_ball_coordinates_when_need_to_fall_from_arithmetic_block_to_road(self):
-		if self.road_ball.ball_need_to_fall_from_arithmetic_block(self.road_ball.arithmetic_block):
-			self.road_ball.change_ball_coordinates_when_falling_from_block()
-		if self.road_ball.get_ball_status() == 'ball_on_road_level':
-			self.road_ball.ball_start_center_coordinates[1] = self.road_height - self.road_ball.ball_radius - 5
-			self.road_ball.ball_center_coordinates[1] = self.road_height - self.road_ball.ball_radius - 5
-			self.check_for_fall_from_block_to_road = False
+	def check_ball_fell_from_block_to_road(self):
+		if self.check_for_fall_from_block_to_road:
+			if self.road_ball.ball_fell_from_block_to_road():
+				self.check_for_fall_from_block_to_road = False
 
 	def set_new_ball_XY_coordinates_when_collision_with_arithmetic_block(self):
 		if self.arithmetic_blocks_and_status_for_ball != []:
@@ -150,10 +146,13 @@ class Jump_Game:
 		self.road_ball.get_arithmetic_block_that_closest_to_ball()
 		
 		if self.arithmetic_blocks_and_status_for_ball != []:
-			if self.road_ball.ball_in_one_of_jump_statuses_and_beyond_block() and self.ball_in_jump:
+			if self.road_ball.arithmetic_block_behind_ball(self.road_ball.arithmetic_block) and self.ball_in_jump:
 				print('Ball jump status:', self.road_ball.get_ball_status())
 				self.check_for_fall_from_block_to_road = False
-			else:
+			# TODO: important to define only little area of ball status as block behind ball. 
+			# It complicates code and to find errors.
+
+			elif self.road_ball.arithmetic_block_behind_ball(self.road_ball.arithmetic_block) and not self.ball_in_jump:
 				self.check_for_fall_from_block_to_road = True
 
 		self.set_new_ball_XY_coordinates_when_collision_with_arithmetic_block()

@@ -294,15 +294,15 @@ class Game_Ball:
 		else:
 			return False
 
-	def ball_need_to_fall_from_arithmetic_block(self, arithmetic_block_obj):
-		if arithmetic_block_obj != '':
-			arithmetic_block_parameters = arithmetic_block_obj.get_block_parameters()
-			aritmetic_block_width = arithmetic_block_parameters[2]
-			if self.ball_center_coordinates[0] >= arithmetic_block_parameters[0] + aritmetic_block_width and \
-			self.ball_status != 'ball_in_jump_from_block_to_road':
-				return True
-			else:
-				return False
+	# def ball_need_to_fall_from_arithmetic_block(self, arithmetic_block_obj):
+	# 	if arithmetic_block_obj != '':
+	# 		arithmetic_block_parameters = arithmetic_block_obj.get_block_parameters()
+	# 		aritmetic_block_width = arithmetic_block_parameters[2]
+	# 		if self.ball_center_coordinates[0] >= arithmetic_block_parameters[0] + aritmetic_block_width and \
+	# 		self.ball_status != 'ball_in_jump_from_block_to_road':
+	# 			return True
+	# 		else:
+	# 			return False
 
 	def change_ball_coordinates_when_falling_from_block(self):
 		if self.ball_center_coordinates[1] + self.ball_radius >= self.height_of_road:
@@ -314,12 +314,23 @@ class Game_Ball:
 			self.ball_jump_speed += self.acceleration_of_ball_speed_to_down
 			self.ball_status = 'ball_falling_from_block'
 
-	def ball_in_one_of_jump_statuses_and_beyond_block(self):
-		if self.arithmetic_block_behind_ball(self.arithmetic_block) and \
-		self.ball_status in ('ball_in_jump_from_block_to_road'):
+	def ball_fell_from_block_to_road(self):
+		# if self.road_ball.ball_need_to_fall_from_arithmetic_block(self.road_ball.arithmetic_block):
+		# 	self.road_ball.change_ball_coordinates_when_falling_from_block()
+		if self.ball_status == 'ball_on_road_level':
+			self.ball_start_center_coordinates[1] = self.road_height - self.road_ball.ball_radius - 2
+			self.ball_center_coordinates[1] = self.road_height - self.road_ball.ball_radius - 2
 			return True
 		else:
+			self.change_ball_coordinates_when_falling_from_block()
 			return False
+
+	# def ball_in_one_of_jump_statuses_and_beyond_block(self):
+	# 	if self.arithmetic_block_behind_ball(self.arithmetic_block) and \
+	# 	self.ball_status in ('ball_in_jump_from_block_to_road'):
+	# 		return True
+	# 	else:
+	# 		return False
 
 
 
