@@ -35,6 +35,7 @@ class Game_Ball:
 		self.all_arithmetic_blocks_on_road = []
 		self.arithmetic_block = ''
 		self.ball_jump_status_func_executions = [False, False, False]
+		self.index_of_current_block_for_overjumping = 0
 
 	def draw_ball(self):
 		pg.draw.circle(self.screen_surface, self.ball_color, self.ball_center_coordinates, self.ball_radius)
@@ -162,10 +163,17 @@ class Game_Ball:
 				return True
 		return False
 
+	def block_with_index_behind_ball(self, target_block_index):
+		if self.all_arithmetic_blocks_on_road[target_block_index][1] == 'Behind':
+			return True
+		else:
+			return False
+
 	def set_new_block_status_for_block_behind_ball(self):
 		for block in self.all_arithmetic_blocks_on_road:
 			if self.arithmetic_block_behind_ball(block[0]):
 				block[1] = 'Behind'
+				self.index_of_current_block_for_overjumping += 1
 
 	def update_blocks_status_after_ball_jumping(self):
 		return self.all_arithmetic_blocks_on_road
@@ -239,13 +247,6 @@ class Game_Ball:
 		new_start_ball_Y_center_coordinate = self.height_of_road - self.ball_radius - 2
 		self.ball_start_center_coordinates[1] = new_start_ball_Y_center_coordinate
 
-	def arithmetic_block_behind_ball(self, arithmetic_block_obj):
-		block_parameters = arithmetic_block_obj.get_block_parameters()
-		if self.ball_center_coordinates[0] > block_parameters[0] + block_parameters[2]:
-			return True
-		else:
-			return False
-
 	def check_ball_collision_with_arithmetic_block_and_set_new_ball_XY(self, arithmetic_block_obj):
 		arithmetic_block_parameters = arithmetic_block_obj.get_block_parameters()
 		aritmetic_block_width = arithmetic_block_parameters[2]
@@ -304,9 +305,17 @@ class Game_Ball:
 	# 		else:
 	# 			return False
 
+	def arithmetic_block_behind_ball(self, arithmetic_block_obj):
+		block_parameters = arithmetic_block_obj.get_block_parameters()
+		if self.ball_center_coordinates[0] > block_parameters[0] + block_parameters[2] and \
+		not self.block_with_index_behind_ball(self.index_of_current_block_for_overjumping):
+			return True
+		else:
+			return False
+
 	def change_ball_coordinates_when_falling_from_block(self):
 		if self.ball_center_coordinates[1] + self.ball_radius >= self.height_of_road:
-			self.ball_status = 'ball_on_road_level'
+			self.ball_status = 'ball_fell_from_block_to_road'
 			self.set_initial_ball_parameters_for_jump()
 		else:
 			self.ball_center_coordinates[1] += self.ball_jump_speed
@@ -317,7 +326,7 @@ class Game_Ball:
 	def ball_fell_from_block_to_road(self):
 		# if self.road_ball.ball_need_to_fall_from_arithmetic_block(self.road_ball.arithmetic_block):
 		# 	self.road_ball.change_ball_coordinates_when_falling_from_block()
-		if self.ball_status == 'ball_on_road_level':
+		if self.ball_status == 'ball_fell_from_block_to_road':
 			self.ball_start_center_coordinates[1] = self.road_height - self.road_ball.ball_radius - 2
 			self.ball_center_coordinates[1] = self.road_height - self.road_ball.ball_radius - 2
 			return True

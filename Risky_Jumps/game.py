@@ -149,8 +149,8 @@ class Jump_Game:
 			if self.road_ball.arithmetic_block_behind_ball(self.road_ball.arithmetic_block) and self.ball_in_jump:
 				print('Ball jump status:', self.road_ball.get_ball_status())
 				self.check_for_fall_from_block_to_road = False
-			# TODO: important to define only little area of ball status as block behind ball. 
-			# It complicates code and to find errors.
+			# TODO:It's important to define only little area of ball status as block behind ball. 
+			# It complicates code and hard to find errors.
 
 			elif self.road_ball.arithmetic_block_behind_ball(self.road_ball.arithmetic_block) and not self.ball_in_jump:
 				self.check_for_fall_from_block_to_road = True
@@ -166,7 +166,6 @@ class Jump_Game:
 			current_ball_status = self.road_ball.get_ball_status()
 			print('Ball jump status:', current_ball_status)
 
-			# if current_ball_status in ('Ball_jumped', 'Ball_jumped_on_block', 'Ball_jumped_from_block_to_road'):
 			if current_ball_status in ('ball_jumped_from_road_to_road', 'ball_jumped_to_block', 'ball_jumped_from_block_to_road'):
 				print('WARNING! Ball jumped!')
 				print('Current ball status:', current_ball_status)
@@ -241,6 +240,7 @@ class Jump_Game:
 
 	def delete_arithmetic_block_beyond_game_screen(self):
 		self.arithmetic_blocks_and_status_for_ball.remove(self.arithmetic_blocks_and_status_for_ball[0])
+		self.road_ball.index_of_current_block_for_overjumping -= 1
 
 	def create_lines_coordinates(self, start_road_coordinates = 1, end_road_coordinates = 1):
 		result_lines_coordinates = []
