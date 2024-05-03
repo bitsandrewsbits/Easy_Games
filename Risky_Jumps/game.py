@@ -337,10 +337,12 @@ class Jump_Game:
 			tmp_road_coordinates = self.create_lines_coordinates(self.display_size[0], 2 * self.display_size[0])
 			self.roadlines_coordinates += tmp_road_coordinates
 			print(self.roadlines_coordinates)
+		
 		if self.road_distance % 800 == 0:
 			new_block_obstacle = block_obsticle.Arithmetic_Obstacle_Block(self.game_main_window, 
 																self.display_size, self.roadlines_coordinates)
 			self.arithmetic_blocks_and_status_for_ball.append([new_block_obstacle, 'Ahead'])
+
 		if self.road_distance % 300 == 0:
 			print('arithmetic_blocks_and_status_for_ball:', self.arithmetic_blocks_and_status_for_ball)
 
