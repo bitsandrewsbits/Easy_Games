@@ -40,6 +40,7 @@ class Jump_Game:
 					                     (300, 200), (100, 100, 100), ['Exit', 'Continue', "New Game"])
 		self.icon_image = "risky_jumps_game_icon.png"
 		self.arithmetic_blocks_and_status_for_ball = []
+		self.change_road_block_parameters_friequency_by_passed_distance = 800
 
 	def init_game_parameters(self):
 		pygame.display.set_caption('Risky Jumps')
@@ -146,13 +147,11 @@ class Jump_Game:
 		self.road_ball.get_arithmetic_block_that_closest_to_ball()
 		
 		if self.arithmetic_blocks_and_status_for_ball != []:
-			if self.road_ball.arithmetic_block_behind_ball(self.road_ball.arithmetic_block) and self.ball_in_jump:
+			if self.road_ball.arithmetic_block_behind_ball() or self.ball_in_jump:
 				print('Ball jump status:', self.road_ball.get_ball_status())
 				self.check_for_fall_from_block_to_road = False
-			# TODO:It's important to define only little area of ball status as block behind ball. 
-			# It complicates code and hard to find errors.
 
-			elif self.road_ball.arithmetic_block_behind_ball(self.road_ball.arithmetic_block) and not self.ball_in_jump:
+			elif self.road_ball.arithmetic_block_behind_ball() and not self.ball_in_jump:
 				self.check_for_fall_from_block_to_road = True
 
 		self.set_new_ball_XY_coordinates_when_collision_with_arithmetic_block()
@@ -164,7 +163,7 @@ class Jump_Game:
 			self.road_ball.set_ball_jump_status_in_different_cases()
 			
 			current_ball_status = self.road_ball.get_ball_status()
-			print('Ball jump status:', current_ball_status)
+			# print('Ball jump status:', current_ball_status)
 
 			if current_ball_status in ('ball_jumped_from_road_to_road', 'ball_jumped_to_block', 'ball_jumped_from_block_to_road'):
 				print('WARNING! Ball jumped!')
@@ -181,8 +180,8 @@ class Jump_Game:
 			for i in range(1, len(self.roadlines_coordinates), 2):
 				if current_ball_X_coordinate > self.roadlines_coordinates[i][0] and \
 				    current_ball_X_coordinate < self.roadlines_coordinates[i + 1][0]:
-				    print('Ball in hole area!!!')
-				    print('Ball status:', self.road_ball.get_ball_status())
+				    # print('Ball in hole area!!!')
+				    # print('Ball status:', self.road_ball.get_ball_status())
 				    if self.road_ball.get_ball_status() in ('move_on_road', 'ball_jumped_from_road_to_road', 
 				    'ball_jumped_from_block_to_road', 'ball_on_road_level') or \
 				    (self.road_ball.get_ball_status() in ('ball_in_jump_from_road_to_road', 
@@ -314,7 +313,8 @@ class Jump_Game:
 		if self.road_ball.get_ball_status() != 'game_over':
 			self.road_distance += 1
 		
-		if self.road_distance % self.display_size[0] == 0 and self.road_distance != 0:
+		if self.road_distance % self.change_road_block_parameters_friequency_by_passed_distance == 0 and \
+		self.road_distance != 0:
 			print('Distance:', self.road_distance)
 			print('Adding new hole...')
 			self.holes_amount += 1
@@ -329,7 +329,7 @@ class Jump_Game:
 			print('Start adding coordinates...(distance = 0)')
 			self.set_up_start_roadline_coordinates()
 			print(self.roadlines_coordinates)
-		elif self.road_distance % self.display_size[0] == 0:
+		elif self.road_distance % self.change_road_block_parameters_friequency_by_passed_distance == 0:
 			self.remove_road_coordinates_beyond_screen()
 			print('Coordinates after removing.')
 			print(self.roadlines_coordinates)
@@ -338,12 +338,12 @@ class Jump_Game:
 			self.roadlines_coordinates += tmp_road_coordinates
 			print(self.roadlines_coordinates)
 		
-		if self.road_distance % 800 == 0:
+		if self.road_distance % self.change_road_block_parameters_friequency_by_passed_distance == 0:
 			new_block_obstacle = block_obsticle.Arithmetic_Obstacle_Block(self.game_main_window, 
 																self.display_size, self.roadlines_coordinates)
 			self.arithmetic_blocks_and_status_for_ball.append([new_block_obstacle, 'Ahead'])
 
-		if self.road_distance % 300 == 0:
+		if self.road_distance % 100 == 0:
 			print('arithmetic_blocks_and_status_for_ball:', self.arithmetic_blocks_and_status_for_ball)
 
 	def set_up_start_roadline_coordinates(self):
