@@ -147,11 +147,12 @@ class Jump_Game:
 		self.road_ball.get_arithmetic_block_that_closest_to_ball()
 		
 		if self.arithmetic_blocks_and_status_for_ball != []:
-			if self.road_ball.arithmetic_block_behind_ball() or self.ball_in_jump:
+			if self.road_ball.arithmetic_block_behind_ball() and self.ball_in_jump:
 				print('Ball jump status:', self.road_ball.get_ball_status())
 				self.check_for_fall_from_block_to_road = False
 
-			elif self.road_ball.arithmetic_block_behind_ball() and not self.ball_in_jump:
+			elif self.road_ball.arithmetic_block_behind_ball() and not self.ball_in_jump and \
+			self.road_ball.get_ball_status() != 'ball_fell_from_block_to_road':
 				self.check_for_fall_from_block_to_road = True
 
 		self.set_new_ball_XY_coordinates_when_collision_with_arithmetic_block()
