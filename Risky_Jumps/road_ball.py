@@ -15,7 +15,7 @@ class Game_Ball:
 		self.ball_jump_speed_on_top = 0
 		self.ball_jump_speed_on_bottom = 0
 		# self.ball_jump_total_distance = 120        # in pixels
-		self.ball_move_distance = 0
+		# self.ball_move_distance = 0
 		self.ball_jump_to_up = True
 		self.ball_jump_to_down = False
 		self.ball_status = 'move_on_road'
@@ -43,20 +43,20 @@ class Game_Ball:
 	def ball_jump(self):
 		if self.ball_jump_to_up:
 			self.ball_center_coordinates[1] -= self.ball_jump_speed
-			self.ball_move_distance += self.ball_jump_speed
+			# self.ball_move_distance += self.ball_jump_speed
 			self.ball_jump_speed += self.acceleration_of_ball_speed_to_up
-			# print('Ball speed[UP]:', self.ball_jump_speed)
+			print('Ball speed[UP]:', self.ball_jump_speed)
 			
 		if round(self.ball_jump_speed) == 0.0:
-			# print('Ball changing move vector do DOWN!')
+			print('Ball changing move vector do DOWN!')
 			self.ball_jump_to_up = False
 			self.ball_jump_to_down = True
 
 		if self.ball_jump_to_down:
 			self.ball_center_coordinates[1] += self.ball_jump_speed
-			self.ball_move_distance += self.ball_jump_speed
+			# self.ball_move_distance += self.ball_jump_speed
 			self.ball_jump_speed += self.acceleration_of_ball_speed_to_down
-			# print('Ball speed[DOWN]:', self.ball_jump_speed)
+			print('Ball speed[DOWN]:', self.ball_jump_speed)
 
 		self.draw_ball()
 
@@ -93,7 +93,7 @@ class Game_Ball:
 			# print('Ball status:', self.ball_status)
 	
 	def set_ball_status_when_jump_from_block_to_road(self):
-		if self.arithmetic_block_behind_ball():
+		if self.arithmetic_block_behind_ball() and self.get_arithmetic_block_that_closest_to_ball():
 			if self.ball_center_coordinates[1] + self.ball_radius >= self.height_of_road:
 				self.set_initial_ball_parameters_for_jump()
 				self.ball_status = 'ball_jumped_from_block_to_road'
@@ -104,8 +104,9 @@ class Game_Ball:
 				print('Ball start Y coordinate for jump =', self.ball_start_center_coordinates[1])
 				print('Road height =', self.height_of_road)
 				print('Ball status =', self.ball_status)
-				if not self.block_for_ball_overjump_index_number_more_then_block_list_length():
+				if not self.block_for_ball_overjumping_index_number_more_then_block_max_index():
 					self.index_of_current_block_for_overjumping += 1
+				print('INDEX of current block =', self.index_of_current_block_for_overjumping)
 			else:
 				self.ball_status = 'ball_in_jump_from_block_to_road'
 				# print('Ball acceleration to UP:', self.acceleration_of_ball_speed_to_up)
@@ -131,7 +132,7 @@ class Game_Ball:
 			else:
 				self.ball_status = 'ball_in_jump_from_road_to_road'
 
-	def block_for_ball_overjump_index_number_more_then_block_list_length(self):
+	def block_for_ball_overjumping_index_number_more_then_block_max_index(self):
 		if self.index_of_current_block_for_overjumping + 1 > len(self.all_arithmetic_blocks_on_road) - 1:
 			return True
 		else:
@@ -147,7 +148,6 @@ class Game_Ball:
 	def set_initial_ball_parameters_for_jump(self):
 		self.ball_jump_to_down = False
 		self.ball_jump_to_up = True
-		self.ball_move_distance = 0
 		self.ball_jump_speed = self.start_ball_jump_speed
 		self.ball_status = 'move_on_road'
 		self.need_to_change_ball_Y_coordinate = True
@@ -163,19 +163,13 @@ class Game_Ball:
 					self.arithmetic_block = block[0]
 					break
 		else:
-			return 'blocks dont exist yet'
+			return False
 
 	def any_block_behind_ball(self):
 		for block in self.all_arithmetic_blocks_on_road:
 			if block[1] == 'Behind':
 				return True
 		return False
-
-	# def block_with_index_behind_ball(self, target_block_index):
-	# 	if self.all_arithmetic_blocks_on_road[target_block_index][1] == 'Behind':
-	# 		return True
-	# 	else:
-	# 		return False
 
 	def set_new_block_status_for_current_block_behind_ball(self):
 		if len(self.all_arithmetic_blocks_on_road) == 1 and self.ball_overjumped_or_fell_from_arithmetic_block():
@@ -187,6 +181,7 @@ class Game_Ball:
 			self.all_arithmetic_blocks_on_road[i + 1][1] == 'Ahead' and \
 			self.ball_overjumped_or_fell_from_arithmetic_block():
 				self.all_arithmetic_blocks_on_road[i + 1][1] = 'Behind'
+				print('Ball OVERJUMPED Block. SET new block status - Behind')
 				break
 
 	def update_blocks_status_after_ball_jumping(self):
@@ -242,7 +237,7 @@ class Game_Ball:
 			self.ball_status = 'game_over'
 		else:
 			self.ball_center_coordinates[1] += self.ball_jump_speed
-			self.ball_move_distance += self.ball_jump_speed
+			# self.ball_move_distance += self.ball_jump_speed
 			self.ball_jump_speed += self.acceleration_of_ball_speed_to_down
 
 	def is_changed_road_height(self):
@@ -329,7 +324,6 @@ class Game_Ball:
 			self.ball_status = 'ball_fell_from_block_to_road'
 		else:
 			self.ball_center_coordinates[1] += self.ball_jump_speed
-			self.ball_move_distance += self.ball_jump_speed
 			self.ball_jump_speed += self.acceleration_of_ball_speed_to_down
 			self.ball_status = 'ball_falling_from_block'
 
@@ -338,6 +332,11 @@ class Game_Ball:
 			self.ball_start_center_coordinates[1] = self.height_of_road - self.ball_radius - 2
 			self.ball_center_coordinates[1] = self.height_of_road - self.ball_radius - 2
 			print('WARNING! Ball FELL from BLOCK to ROAD!')
+			self.set_initial_ball_parameters_for_jump()
+			if not self.block_for_ball_overjumping_index_number_more_then_block_max_index():
+				self.index_of_current_block_for_overjumping += 1
+			self.set_new_block_status_for_current_block_behind_ball()
+			print('INDEX of current block =', self.index_of_current_block_for_overjumping)
 			return True
 		else:
 			self.change_ball_coordinates_when_falling_from_block()

@@ -148,11 +148,11 @@ class Jump_Game:
 		
 		if self.arithmetic_blocks_and_status_for_ball != []:
 			if self.road_ball.arithmetic_block_behind_ball() and self.ball_in_jump:
-				print('Ball jump status:', self.road_ball.get_ball_status())
+				# print('Ball jump status:', self.road_ball.get_ball_status())
 				self.check_for_fall_from_block_to_road = False
 
 			elif self.road_ball.arithmetic_block_behind_ball() and not self.ball_in_jump and \
-			self.road_ball.get_ball_status() != 'ball_fell_from_block_to_road':
+			self.road_ball.get_ball_status() not in ('ball_fell_from_block_to_road', 'move_on_road'):
 				self.check_for_fall_from_block_to_road = True
 
 		self.set_new_ball_XY_coordinates_when_collision_with_arithmetic_block()
@@ -168,7 +168,7 @@ class Jump_Game:
 
 			if current_ball_status in ('ball_jumped_from_road_to_road', 'ball_jumped_to_block', 'ball_jumped_from_block_to_road'):
 				print('WARNING! Ball jumped!')
-				print('Current ball status:', current_ball_status)
+				# print('Current ball status:', current_ball_status)
 				self.ball_in_jump = False
 				self.amount_of_jumps += 1
 
