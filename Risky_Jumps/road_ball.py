@@ -172,15 +172,19 @@ class Game_Ball:
 		return False
 
 	def set_new_block_status_for_current_block_behind_ball(self):
-		if len(self.all_arithmetic_blocks_on_road) == 1 and self.ball_overjumped_or_fell_from_arithmetic_block():
+		if len(self.all_arithmetic_blocks_on_road) == 1:
 			print('Ball OVERJUMPED Block. SET new block status - Behind')
 			self.all_arithmetic_blocks_on_road[0][1] = 'Behind'
 
 		for i in range(len(self.all_arithmetic_blocks_on_road) - 1):
 			if self.all_arithmetic_blocks_on_road[i][1] == 'Behind' and \
-			self.all_arithmetic_blocks_on_road[i + 1][1] == 'Ahead' and \
-			self.ball_overjumped_or_fell_from_arithmetic_block():
+			self.all_arithmetic_blocks_on_road[i + 1][1] == 'Ahead':
 				self.all_arithmetic_blocks_on_road[i + 1][1] = 'Behind'
+				print('Ball OVERJUMPED Block. SET new block status - Behind')
+				break
+			elif self.all_arithmetic_blocks_on_road[i][1] == 'Ahead' and \
+			self.all_arithmetic_blocks_on_road[i + 1][1] == 'Ahead':
+				self.all_arithmetic_blocks_on_road[i][1] = 'Behind'
 				print('Ball OVERJUMPED Block. SET new block status - Behind')
 				break
 

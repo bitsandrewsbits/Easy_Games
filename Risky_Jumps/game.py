@@ -239,6 +239,7 @@ class Jump_Game:
 	# 	self.road_ball.set_new_ball_Y_coordinate_as_correction()
 
 	def delete_arithmetic_block_beyond_game_screen(self):
+		print('Block is BEYOND game screen. deleting block...')
 		self.arithmetic_blocks_and_status_for_ball.remove(self.arithmetic_blocks_and_status_for_ball[0])
 		self.road_ball.index_of_current_block_for_overjumping -= 1
 
