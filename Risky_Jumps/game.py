@@ -34,8 +34,9 @@ class Jump_Game:
 		self.check_for_fall_from_block_to_road = False
 		self.amount_of_jumps = 0
 		self.iterations_per_second = 40
+		self.start_menu_executed = False
 		self.start_menu = menu.Game_Menu(self.game_main_window, self.display_size, "Start", 
-					                     (300, 200), (100, 100, 100), ['Start'])
+					                     (300, 200), (100, 100, 100), ['Start', 'Exit'])
 		self.exit_menu = menu.Game_Menu(self.game_main_window, self.display_size, "Pause", 
 					                     (300, 200), (100, 100, 100), ['Exit', 'Continue', "New Game"])
 		self.icon_image = "risky_jumps_game_icon.png"
@@ -108,6 +109,8 @@ class Jump_Game:
 
 	def game_interface(self):
 		self.game_main_window.fill(self.display_rgb_color)
+		if not self.start_menu_executed:
+			self.start_game_menu()
 
 		self.check_on_ball_jump()
 		self.check_ball_coordinates_when_need_to_fall_from_road_into_hole()
@@ -117,6 +120,15 @@ class Jump_Game:
 		self.show_road_passed_distance()
 		self.game_roadline()
 		self.arithmetic_blocks_obstacle_on_road()
+
+	def start_game_menu(self):
+		menu_button_name_and_status = self.start_menu.menu_displaying()
+		if menu_button_name_and_status[1] == True and menu_button_name_and_status[0] == 'Exit':
+			print('Exitting from game...', menu_button_name_and_status)
+			self.exit_from_game = True
+		elif menu_button_name_and_status[1] == True and menu_button_name_and_status[0] == 'Start':
+			print('Starting first game...')
+			self.start_menu_executed = True
 
 	def check_ball_coordinates_when_need_to_fall_from_road_into_hole(self):
 		if not self.ball_falling_cause_game_over:
