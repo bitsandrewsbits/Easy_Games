@@ -152,6 +152,9 @@ class Jump_Game:
 
 	def check_on_ball_jump(self):
 		# print('Ball status:', self.road_ball.get_ball_status())
+		if self.road_ball.ball_beyond_game_screen():
+			self.show_game_over_menu()
+
 		self.road_ball.set_new_game_FPS(self.iterations_per_second)
 		self.road_ball.check_game_FPS_changing()
 		self.road_ball.get_all_arithmetic_blocks_and_status_for_ball(self.arithmetic_blocks_and_status_for_ball)
@@ -206,14 +209,17 @@ class Jump_Game:
 		if self.road_ball.get_ball_status() != 'game_over':
 			self.road_ball.ball_changing_coordinates_when_falling_from_road()
 		else:
-			game_over_menu = menu.Game_Menu(self.game_main_window, self.display_size, "Game Over", 
+			self.show_game_over_menu()
+
+	def show_game_over_menu(self):
+		game_over_menu = menu.Game_Menu(self.game_main_window, self.display_size, "Game Over", 
 								(350, 200), (120, 140, 130), ['New Game', 'Exit'], 
 								{"Passed Distance:": self.road_distance, "Jumps amount:": self.amount_of_jumps})
-			pressed_button_in_game_over_menu = game_over_menu.menu_displaying()[0]
-			if pressed_button_in_game_over_menu == 'Exit':
-				self.exit_from_game = True
-			if pressed_button_in_game_over_menu == 'New Game':
-				self.reset_game_parameters_to_start()
+		pressed_button_in_game_over_menu = game_over_menu.menu_displaying()[0]
+		if pressed_button_in_game_over_menu == 'Exit':
+			self.exit_from_game = True
+		if pressed_button_in_game_over_menu == 'New Game':
+			self.reset_game_parameters_to_start()
 
 	def ball_start_jumping_sound(self):
 		ball_jumping_sound = pygame.mixer.Sound("ball_jumped.wav")

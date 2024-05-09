@@ -346,8 +346,11 @@ class Game_Ball:
 			self.change_ball_coordinates_when_falling_from_block()
 			return False
 
-
-
+	def ball_beyond_game_screen(self):
+		if self.ball_center_coordinates[0] <= 0:
+			return True
+		else:
+			return False
 
 
 
