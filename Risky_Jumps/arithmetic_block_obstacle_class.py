@@ -18,13 +18,14 @@ class Arithmetic_Obstacle_Block:
 		self.left_math_operand = randint(10, 60)
 		self.math_operator = '+'
 		self.right_math_operand = randint(10, 60)
-		self.width_of_block = self.left_math_operand * 2
-		self.height_of_block = self.right_math_operand * 2
-		self.block_color_in_RGB = (140, 190, 200)
-		self.block_text_color_in_RGB = (200, 200, 200)
+		self.width_of_block = self.get_right_block_width()
+		self.height_of_block = self.get_right_block_height()
+		self.block_color_in_RGB = (230, 230, 160)
+		self.block_text_color_in_RGB = (30, 70, 40)
 		self.block_parameters_for_drawing = [self.randomly_choosed_XY_pair_for_block[0], 
 			self.randomly_choosed_XY_pair_for_block[1] - self.height_of_block, self.width_of_block, 
 			self.height_of_block]
+		self.font_of_text_in_block = pg.font.Font('freesansbold.ttf', 15)
 
 	def define_road_XY_coordinates_for_block_on_road(self):
 		for road_XY_pair in self.roadline_XY_pairs_of_coordinates:
@@ -50,7 +51,7 @@ class Arithmetic_Obstacle_Block:
 		return [randomly_choosed_X_coordinate_for_block, Y_coordinate_for_block]
 
 	def draw_block_on_game_road(self):
-		pg.draw.rect(self.pygame_window_obj, self.block_color_in_RGB, self.block_parameters_for_drawing)
+		self.show_arithmatic_example_on_block()
 
 	def set_new_X_coordinate_when_block_moving(self):
 		self.block_parameters_for_drawing[0] -= 1
@@ -62,4 +63,37 @@ class Arithmetic_Obstacle_Block:
 		return f"{str(self.left_math_operand)} + {str(self.right_math_operand)}"
 
 	def show_arithmatic_example_on_block(self):
-		# function which displays math example on block.
+		block_math_example_string = self.get_math_example_in_string_form()
+		block_math_example_XY_center = (self.block_parameters_for_drawing[0] + 40, 
+										self.block_parameters_for_drawing[1] + 20)
+		
+		block_Rect = pg.draw.rect(self.pygame_window_obj, self.block_color_in_RGB, self.block_parameters_for_drawing)
+		block_math_example = self.font_of_text_in_block.render(block_math_example_string, True, 
+															self.block_text_color_in_RGB, self.block_color_in_RGB)
+		block_math_example_Rect = block_math_example.get_rect()
+		block_math_example_Rect.center = block_math_example_XY_center
+		self.pygame_window_obj.blit(block_math_example, block_math_example_Rect)
+
+	def get_right_block_width(self):
+		if self.arithmetic_block_has_small_left_math_operand_as_width_for_block():
+			return self.left_math_operand * 2 + 50
+		else:
+			return self.left_math_operand * 2
+
+	def get_right_block_height(self):
+		if self.arithmetic_block_has_small_right_math_operand_as_height_for_block():
+			return self.right_math_operand * 3
+		else:
+			return self.right_math_operand * 2
+
+	def arithmetic_block_has_small_left_math_operand_as_width_for_block(self):
+		if self.left_math_operand * 2 < 60:
+			return True
+		else:
+			return False
+
+	def arithmetic_block_has_small_right_math_operand_as_height_for_block(self):
+		if self.right_math_operand * 2 < 30:
+			return True
+		else:
+			return False
