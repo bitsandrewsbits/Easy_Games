@@ -18,6 +18,7 @@ class Arithmetic_Obstacle_Block:
 		self.left_math_operand = randint(10, 60)
 		self.math_operator = '+'
 		self.right_math_operand = randint(10, 60)
+		self.right_answer_for_block_math_example = self.left_math_operand + self.right_math_operand
 		self.width_of_block = self.get_right_block_width()
 		self.height_of_block = self.get_right_block_height()
 		self.block_color_in_RGB = (230, 230, 160)
@@ -97,3 +98,6 @@ class Arithmetic_Obstacle_Block:
 			return True
 		else:
 			return False
+
+	def get_right_answer_for_block_example(self):
+		return self.right_answer_for_block_math_example
