@@ -9,15 +9,16 @@ class Input_Answer_Window:
 		self.window_XY_start_coordinates = (self.main_game_window_size[0] // 2, 
 											self.main_game_window_size[1] - self.window_width_height[1])
 		self.window_color_in_RGB = (10, 10, 10)
-		self.input_area_inactive_color_in_RGB = (150, 150, 150)
-		self.input_area_active_color_in_RGB = (120,120, 120)
+		self.input_area_color_in_RGB = (100, 100, 100)
 		self.input_digits_color_in_RGB = (10, 200, 100)
 		self.window_description_title = 'Enter your answer:'
 		self.digit_buttons_pygame_codes = (pg.K_0, pg.K_1, pg.K_2, pg.K_3, pg.K_4, pg.K_5, pg.K_6,
 										   pg.K_7, pg.K_8, pg.K_9, pg.K_KP0, pg.K_KP1, pg.K_KP2, pg.K_KP3,
 										   pg.K_KP4, pg.K_KP5, pg.K_KP6, pg.K_KP7, pg.K_KP8, pg.K_KP9)
 		self.backspace_button_code = pg.K_BACKSPACE
+		self.enter_button_code = pg.K_RETURN
 		self.user_input_text = ''
+		self.max_length_of_user_input_string = 6
 
 
 	def get_input_window_Rect_obj(self):
@@ -49,6 +50,8 @@ class Input_Answer_Window:
 	def add_digit_to_user_input_string(self, user_event):
 		if self.digit_button_pressed_on_keyboard(user_event):
 			self.user_input_text += user_event.unicode
+			if self.user_input_string_more_than_need():
+				self.user_input_text = self.user_input_text[:-1]
 
 	def backspace_button_pressed_on_keyboard(self, user_event):
 		user_button = user_event.key
@@ -61,6 +64,22 @@ class Input_Answer_Window:
 		if self.backspace_button_pressed_on_keyboard(user_event):
 			self.user_input_text = self.user_input_text[:-1]
 
+	def get_user_input_answer_as_number(self, user_event):
+		if self.enter_button_pressed(user_event):
+			return int(self.user_input_text)
+		else:
+			return False
+
+	def enter_button_pressed(self, user_event):
+		user_button = user_event.key
+		if user_button == self.enter_button_code:
+			return True 
+		else:
+			return False
+
 	def user_input_string_more_than_need(self):
-		# method for restriction for big user input string.
-		# enough will be 6 symbols. for now.
+		if len(self.user_input_text) > self.max_length_of_user_input_string:
+			return True
+		else:
+			return False
+
