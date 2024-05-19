@@ -9,6 +9,7 @@ import road_ball as ball
 import game_menu_class as menu
 import menu_button_class as button
 import arithmetic_block_obstacle_class as block_obsticle
+import input_answer_window_class as input_ans
 
 class Jump_Game:
 	def __init__(self, width_height_display = (800, 300)):
@@ -42,6 +43,8 @@ class Jump_Game:
 		self.icon_image = "risky_jumps_game_icon.png"
 		self.arithmetic_blocks_and_status_for_ball = []
 		self.change_road_block_parameters_friequency_by_passed_distance = 800
+		self.user_input_window = input_ans.Input_Answer_Window(self.game_main_window, self.display_size)
+		self.block_index_for_deleting_when_user_answer_is_right = 0
 
 	def init_game_parameters(self):
 		pygame.display.set_caption('Risky Jumps')
@@ -61,6 +64,9 @@ class Jump_Game:
 					self.exit_from_game = True
 				
 				if game_event.type == pygame.KEYDOWN:
+					self.user_input_window.implement_user_input(game_event)
+					if self.user_answer_and_right_answer_for_any_blocks_matched(game_event):
+						self.remove_block_when_user_answer_is_right()
 					if game_event.key == pygame.K_UP and self.road_ball.get_ball_status() != 'game_over':
 						self.ball_in_jump = True
 						# self.ball_start_jumping_sound()
@@ -86,6 +92,20 @@ class Jump_Game:
 
 			pygame.display.update()
 
+	def remove_block_when_user_answer_is_right(self):
+		self.arithmetic_blocks_and_status_for_ball.pop(self.block_index_for_deleting_when_user_answer_is_right)
+
+	def user_answer_and_right_answer_for_any_blocks_matched(self, user_event):
+		if self.user_input_window.enter_button_pressed(user_event):
+			user_answer = self.user_input_window.get_user_input_answer_as_number()
+
+			for i in range(len(self.arithmetic_blocks_and_status_for_ball)):
+				if self.arithmetic_blocks_and_status_for_ball[i][0].right_answer_for_block_math_example == user_answer:
+					self.block_index_for_deleting_when_user_answer_is_right = i
+					return True
+
+			return False
+
 	def reset_game_parameters_to_start(self):
 		self.road_distance = 0
 		self.holes_amount = 1
@@ -106,11 +126,14 @@ class Jump_Game:
 		self.iterations_per_second = 40
 		self.amount_of_jumps = 0
 		self.arithmetic_blocks_and_status_for_ball = []
+		self.user_input_window = input_ans.Input_Answer_Window(self.game_main_window, self.display_size)
 
 	def game_interface(self):
 		self.game_main_window.fill(self.display_rgb_color)
 		if not self.start_menu_executed:
 			self.start_game_menu()
+
+		self.user_input_window.display_entire_input_window()
 
 		self.check_on_ball_jump()
 		self.check_ball_coordinates_when_need_to_fall_from_road_into_hole()
@@ -238,7 +261,6 @@ class Jump_Game:
 	def arithmetic_blocks_obstacle_on_road(self):
 		if self.arithmetic_blocks_and_status_for_ball != []:
 			if self.arithmetic_block_beyond_game_screen():
-				# self.set_new_ball_Y_coordinate_as_correction_for_next_jumps()
 				self.delete_arithmetic_block_beyond_game_screen()
 			
 			for arithmetic_block in self.arithmetic_blocks_and_status_for_ball:
@@ -252,9 +274,6 @@ class Jump_Game:
 				return True
 
 		return False
-	
-	# def set_new_ball_Y_coordinate_as_correction_for_next_jumps(self):
-	# 	self.road_ball.set_new_ball_Y_coordinate_as_correction()
 
 	def delete_arithmetic_block_beyond_game_screen(self):
 		print('Block is BEYOND game screen. deleting block...')
