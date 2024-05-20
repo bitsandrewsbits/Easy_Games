@@ -5,7 +5,7 @@ import menu_button_class as game_btn
 class Game_Menu:
 	def __init__(self, pygame_window_object = 'pygame_obj', game_display_size = (10, 10), window_title = "Test", 
 					menu_window_size = (10, 10), window_color = 'black', button_names = ['Test names'],
-					static_output_fields = {}):
+					static_output_fields = {}, menu_annotation = ''):
 		self.main_window_pygame_object = pygame_window_object
 		self.main_window_size = game_display_size
 		self.window_title = window_title
@@ -14,6 +14,7 @@ class Game_Menu:
 		self.button_names = button_names
 		self.menu_buttons = self.get_buttons()
 		self.output_info_fields = static_output_fields
+		self.menu_annotation = menu_annotation
 
 	def menu_displaying(self):
 		font_of_text_in_window = pygame.font.Font('freesansbold.ttf', 20)
@@ -40,6 +41,12 @@ class Game_Menu:
 			pygame.display.update()
 	
 		return pressed_menu_button
+
+	def show_menu_annotation(self):
+		#method for right display menu annotation as text block within menu area.
+
+	def get_words_from_menu_annotation(self):
+		return self.menu_annotation.split(' ')
 
 	def menu_button_pressed(self):
 		for game_event in pygame.event.get():
