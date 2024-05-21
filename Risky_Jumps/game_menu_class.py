@@ -15,6 +15,7 @@ class Game_Menu:
 		self.menu_buttons = self.get_buttons()
 		self.output_info_fields = static_output_fields
 		self.menu_annotation = menu_annotation
+		self.menu_annotation_font = 20
 
 	def menu_displaying(self):
 		font_of_text_in_window = pygame.font.Font('freesansbold.ttf', 20)
@@ -44,6 +45,25 @@ class Game_Menu:
 
 	def show_menu_annotation(self):
 		#method for right display menu annotation as text block within menu area.
+
+	def get_right_words_list_per_string_for_menu_size(self):
+		result_annotation_strings = []
+
+		# algorigthm for defining right words string per line for menu annotation
+
+		return result_annotation_strings
+
+	def get_rectangle_objects_for_separate_annotation_words(self):
+		annotation_words = self.get_words_from_menu_annotation()
+		font_of_annotation_text = pygame.font.Font('freesansbold.ttf', self.menu_annotation_font)
+		result_Rect_objects = []
+
+		for word in annotation_words:
+			rendered_word = font_of_annotation_text.render(word + ' ', True, (150, 200, 100), (100, 100, 100))
+			rendered_word_Rect = rendered_word.get_rect()
+			result_Rect_objects.append(rendered_word_Rect)
+
+		return result_Rect_objects
 
 	def get_words_from_menu_annotation(self):
 		return self.menu_annotation.split(' ')
