@@ -50,20 +50,28 @@ class Game_Menu:
 		result_annotation_strings = []
 
 		# algorigthm for defining right words string per line for menu annotation
+		annotation_words = self.get_words_from_menu_annotation()
+		temp_words_string = ''
+
+		first_index_of_word_for_new_annotation_string = 0
+		for i in range(1, len(annotation_words)):
+			part_of_annotation_words = ' '.join(annotation_words[first_index_of_word_for_new_annotation_string:i])
+			Rect_obj_of_part_annotation_words = self.get_rectangle_object_of_certain_annotation_words(part_of_annotation_words)
+			if Rect_obj_of_part_annotation_words.width < self.menu_window_width_height[0]:
+				temp_words_string = part_of_annotation_words
+			else:
+				result_annotation_strings.append(temp_words_string)
+				first_index_of_word_for_new_annotation_string = i
 
 		return result_annotation_strings
 
-	def get_rectangle_objects_for_separate_annotation_words(self):
-		annotation_words = self.get_words_from_menu_annotation()
+	def get_rectangle_object_of_certain_annotation_words(self, words_phrase = ''):
 		font_of_annotation_text = pygame.font.Font('freesansbold.ttf', self.menu_annotation_font)
-		result_Rect_objects = []
 
-		for word in annotation_words:
-			rendered_word = font_of_annotation_text.render(word + ' ', True, (150, 200, 100), (100, 100, 100))
-			rendered_word_Rect = rendered_word.get_rect()
-			result_Rect_objects.append(rendered_word_Rect)
+		rendered_word = font_of_annotation_text.render(words_phrase, True, (150, 200, 100), (100, 100, 100))
+		result_Rect_object = rendered_word.get_rect()
 
-		return result_Rect_objects
+		return result_Rect_object
 
 	def get_words_from_menu_annotation(self):
 		return self.menu_annotation.split(' ')
