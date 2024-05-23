@@ -45,6 +45,11 @@ class Game_Menu:
 
 	def show_menu_annotation(self):
 		#method for right display menu annotation as text block within menu area.
+		menu_annotation_by_strings = self.get_right_words_list_per_string_for_menu_size()
+		for annotation_string in menu_annotation_by_strings:
+			temp_string_Rect = self.get_rectangle_object_of_certain_annotation_words(annotation_string)
+			temp_string_Rect.center = ()
+			self.main_window_pygame_object.blit()
 
 	def get_right_words_list_per_string_for_menu_size(self):
 		result_annotation_strings = []
@@ -65,6 +70,7 @@ class Game_Menu:
 
 		return result_annotation_strings
 
+	#TODO: refactor tomorrow - returning only rendered object.
 	def get_rectangle_object_of_certain_annotation_words(self, words_phrase = ''):
 		font_of_annotation_text = pygame.font.Font('freesansbold.ttf', self.menu_annotation_font)
 
