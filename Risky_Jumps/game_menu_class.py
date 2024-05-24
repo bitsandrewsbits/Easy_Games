@@ -16,6 +16,7 @@ class Game_Menu:
 		self.output_info_fields = static_output_fields
 		self.menu_annotation = menu_annotation
 		self.menu_annotation_font = 20
+		self.index_for_row_height_when_show_annotation_in_menu = 1
 
 	def menu_displaying(self):
 		font_of_text_in_window = pygame.font.Font('freesansbold.ttf', 20)
@@ -24,6 +25,8 @@ class Game_Menu:
 
 		button_pressed = False
 		while not button_pressed:
+			self.show_menu_annotation()
+			
 			window_Rect = pygame.draw.rect(self.main_window_pygame_object, (100, 200, 90), window_parameters)
 			window_title = font_of_text_in_window.render(self.window_title, True, (150, 200, 100), (100, 100, 100))
 			window_title_Rect = window_title.get_rect()
@@ -43,13 +46,26 @@ class Game_Menu:
 	
 		return pressed_menu_button
 
+	def annotation_menu_empty(self):
+		if self.menu_annotation == '':
+			return True
+		else:
+			return False
+
+	#TODO: method for set new Y coordinate for menu buttons cause of annotation
+
+	#method for right display menu annotation as text block within menu area.
 	def show_menu_annotation(self):
-		#method for right display menu annotation as text block within menu area.
 		menu_annotation_by_strings = self.get_right_words_list_per_string_for_menu_size()
 		for annotation_string in menu_annotation_by_strings:
-			temp_string_Rect = self.get_rectangle_object_of_certain_annotation_words(annotation_string)
-			temp_string_Rect.center = ()
-			self.main_window_pygame_object.blit()
+			temp_rendered_string = self.get_rectangle_object_of_certain_annotation_words(annotation_string)
+			temp_string_Rect = temp_rendered_string.get_rect()
+			temp_string_Rect.center = (self.menu_window_width_height[0] * 1.5, 
+				self.menu_window_width_height[1] + temp_string_Rect.height * \
+				self.index_for_row_height_when_show_annotation_in_menu + 5)
+			self.main_window_pygame_object.blit(temp_rendered_string, temp_string_Rect)
+			
+			self.index_for_row_height_when_show_annotation_in_menu += 1
 
 	def get_right_words_list_per_string_for_menu_size(self):
 		result_annotation_strings = []
@@ -61,7 +77,7 @@ class Game_Menu:
 		first_index_of_word_for_new_annotation_string = 0
 		for i in range(1, len(annotation_words)):
 			part_of_annotation_words = ' '.join(annotation_words[first_index_of_word_for_new_annotation_string:i])
-			Rect_obj_of_part_annotation_words = self.get_rectangle_object_of_certain_annotation_words(part_of_annotation_words)
+			Rect_obj_of_part_annotation_words = self.get_rectangle_object_of_certain_annotation_words(part_of_annotation_words).get_rect()
 			if Rect_obj_of_part_annotation_words.width < self.menu_window_width_height[0]:
 				temp_words_string = part_of_annotation_words
 			else:
@@ -70,14 +86,12 @@ class Game_Menu:
 
 		return result_annotation_strings
 
-	#TODO: refactor tomorrow - returning only rendered object.
 	def get_rectangle_object_of_certain_annotation_words(self, words_phrase = ''):
 		font_of_annotation_text = pygame.font.Font('freesansbold.ttf', self.menu_annotation_font)
 
-		rendered_word = font_of_annotation_text.render(words_phrase, True, (150, 200, 100), (100, 100, 100))
-		result_Rect_object = rendered_word.get_rect()
+		rendered_word_object = font_of_annotation_text.render(words_phrase, True, (150, 200, 100), (100, 100, 100))
 
-		return result_Rect_object
+		return rendered_word_object
 
 	def get_words_from_menu_annotation(self):
 		return self.menu_annotation.split(' ')
