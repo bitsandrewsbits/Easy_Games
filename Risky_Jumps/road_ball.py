@@ -14,8 +14,6 @@ class Game_Ball:
 		self.ball_jump_high = 60                 #jump max high (in pixels)
 		self.ball_jump_speed_on_top = 0
 		self.ball_jump_speed_on_bottom = 0
-		# self.ball_jump_total_distance = 120        # in pixels
-		# self.ball_move_distance = 0
 		self.ball_jump_to_up = True
 		self.ball_jump_to_down = False
 		self.ball_status = 'move_on_road'

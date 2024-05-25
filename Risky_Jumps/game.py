@@ -36,8 +36,12 @@ class Jump_Game:
 		self.amount_of_jumps = 0
 		self.iterations_per_second = 40
 		self.start_menu_executed = False
+		self.start_menu_annotation = """Hello. Glad you see here! It's fanny game for developing your math skill, 
+									as known as arithmetics with numbers. You need to overjump holes that appear 
+									on road and try to resolve math example and input right answer for it or you
+									are able to overjump some blocks but do it carefuly. Good Luck!"""
 		self.start_menu = menu.Game_Menu(self.game_main_window, self.display_size, "Start", 
-					                     (300, 200), (100, 100, 100), ['Start', 'Exit'])
+					                     (600, 200), (100, 100, 100), ['Start', 'Exit'], {}, self.start_menu_annotation)
 		self.exit_menu = menu.Game_Menu(self.game_main_window, self.display_size, "Pause", 
 					                     (300, 200), (100, 100, 100), ['Exit', 'Continue', "New Game"])
 		self.icon_image = "risky_jumps_game_icon.png"

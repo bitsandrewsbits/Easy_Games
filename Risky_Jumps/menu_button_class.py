@@ -43,5 +43,8 @@ class Button:
 		self.button_XY_coordinates[0] = X_coordinate
 		self.button_XY_coordinates[1] = Y_coordinate
 
+	def set_button_Y_coordinate(self, new_Y_coordinate = 0):
+		self.button_XY_coordinates[1] = new_Y_coordinate
+
 	def get_button_name(self):
 		return self.button_name
