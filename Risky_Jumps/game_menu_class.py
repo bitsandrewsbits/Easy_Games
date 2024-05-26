@@ -30,6 +30,8 @@ class Game_Menu:
 		while not button_pressed:
 
 			window_Rect = pygame.draw.rect(self.main_window_pygame_object, (100, 200, 90), window_parameters)
+			self.show_menu_annotation()
+			
 			window_title = font_of_text_in_window.render(self.window_title, True, (150, 200, 100), (100, 100, 100))
 			window_title_Rect = window_title.get_rect()
 			window_title_Rect.center = window_title_XY_center
@@ -44,7 +46,6 @@ class Game_Menu:
 			if pressed_menu_button[1] == True:
 				button_pressed = True
 
-			self.show_menu_annotation()
 			pygame.display.update()
 	
 		return pressed_menu_button
@@ -66,15 +67,16 @@ class Game_Menu:
 
 	#method for right display menu annotation as text block within menu area.
 	def show_menu_annotation(self):
+		index_for_new_row_when_show_annotation_in_menu = 0
 		for annotation_string in self.menu_annotation_by_strings:
 			temp_rendered_string = self.get_rectangle_object_of_certain_annotation_words(annotation_string)
 			temp_string_Rect = temp_rendered_string.get_rect()
-			temp_string_Rect.center = (self.get_menu_size_parameters()[0] * 2, 
+			temp_string_Rect.center = (self.get_menu_size_parameters()[0] * 4, 
 				self.get_menu_size_parameters()[1] + temp_string_Rect.height * \
-				self.index_for_row_height_when_show_annotation_in_menu + 5)
+				index_for_new_row_when_show_annotation_in_menu + 20)
 			self.main_window_pygame_object.blit(temp_rendered_string, temp_string_Rect)
 			
-			self.index_for_row_height_when_show_annotation_in_menu += 1
+			index_for_new_row_when_show_annotation_in_menu += 1
 
 	def get_right_words_list_per_string_for_menu_size(self):
 		result_annotation_strings = []
@@ -84,14 +86,22 @@ class Game_Menu:
 		temp_words_string = ''
 
 		first_index_of_word_for_new_annotation_string = 0
-		for i in range(1, len(annotation_words)):
+		for i in range(1, len(annotation_words) + 1):
 			part_of_annotation_words = ' '.join(annotation_words[first_index_of_word_for_new_annotation_string:i])
 			Rect_obj_of_part_annotation_words = self.get_rectangle_object_of_certain_annotation_words(part_of_annotation_words).get_rect()
 			if Rect_obj_of_part_annotation_words.width < self.menu_window_width_height[0]:
 				temp_words_string = part_of_annotation_words
 			else:
+				part_of_annotation_words = ' '.join(annotation_words[first_index_of_word_for_new_annotation_string:i - 1])
+				# print('Annotation string for menu:', temp_words_string)
 				result_annotation_strings.append(temp_words_string)
-				first_index_of_word_for_new_annotation_string = i
+				first_index_of_word_for_new_annotation_string = i - 1
+				self.index_for_row_height_when_show_annotation_in_menu += 1
+
+			if i == len(annotation_words):
+				result_annotation_strings.append(temp_words_string)
+				self.index_for_row_height_when_show_annotation_in_menu += 1
+
 
 		print(result_annotation_strings)
 		return result_annotation_strings
