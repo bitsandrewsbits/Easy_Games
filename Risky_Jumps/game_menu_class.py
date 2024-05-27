@@ -22,10 +22,14 @@ class Game_Menu:
 	def menu_displaying(self):
 		font_of_text_in_window = pygame.font.Font('freesansbold.ttf', 20)
 		window_parameters = self.get_menu_size_parameters()
-		window_title_XY_center = (window_parameters[0] * 1.5, window_parameters[1] + 20)
+		window_title_XY_center = (self.main_window_size[0] * 0.5, window_parameters[1] + 20)
 
 		if not self.annotation_menu_empty():
 			self.set_new_Y_coordinate_for_menu_buttons()
+
+		if not self.window_title_empty():
+			self.set_menu_button_Y_coordinate_as_shifting_for_menu_title()
+		
 		button_pressed = False
 		while not button_pressed:
 
@@ -38,6 +42,7 @@ class Game_Menu:
 			self.main_window_pygame_object.blit(window_title, window_title_Rect)
 
 			self.output_information_fields_from_game()
+			
 
 			for i in range(len(self.menu_buttons)):
 				self.menu_buttons[i].show_game_button()
@@ -50,11 +55,22 @@ class Game_Menu:
 	
 		return pressed_menu_button
 
+	def window_title_empty(self):
+		if self.window_title == '':
+			return True
+		else:
+			return False
+
 	def annotation_menu_empty(self):
 		if self.menu_annotation == '':
 			return True
 		else:
 			return False
+
+	def set_menu_button_Y_coordinate_as_shifting_for_menu_title(self):
+		for button in self.menu_buttons:
+			final_Y_coordinate_for_menu_button = button.button_XY_coordinates[1] + 25
+			button.set_button_Y_coordinate(final_Y_coordinate_for_menu_button)
 
 	def set_new_Y_coordinate_for_menu_buttons(self):
 		new_Y_button_coordinate = self.get_menu_size_parameters()[1] + \
@@ -73,7 +89,7 @@ class Game_Menu:
 			temp_string_Rect = temp_rendered_string.get_rect()
 			temp_string_Rect.center = (self.get_menu_size_parameters()[0] * 4, 
 				self.get_menu_size_parameters()[1] + temp_string_Rect.height * \
-				index_for_new_row_when_show_annotation_in_menu + 20)
+				index_for_new_row_when_show_annotation_in_menu + 40)
 			self.main_window_pygame_object.blit(temp_rendered_string, temp_string_Rect)
 			
 			index_for_new_row_when_show_annotation_in_menu += 1
