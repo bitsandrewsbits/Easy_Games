@@ -6,6 +6,7 @@ import reconizing_my_speech as speech
 from time import sleep
 
 filename = 'UA_words.txt'
+audio_player = 'audacious'
 
 def main(amount_words = 10):
     words_for_training = choose_noun_words(filename, amount_words)
@@ -67,7 +68,7 @@ def start_audio(audiofile = ''):
     if audiofile == '':
         return 'No input audio.'
     else:
-        proc = sp.run(['audacious', audiofile])
+        proc = sp.run([audio_player, audiofile])
 
         audiofile = MP3(audiofile)
         return audiofile.info.length  # return audio duration in seconds
